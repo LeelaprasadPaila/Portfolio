@@ -1,0 +1,319 @@
+/* Admin Dashboard Styles - Premium Dark Theme */
+:root {
+  --admin-bg: #070a17;
+  --admin-card-bg: rgba(15, 23, 42, 0.7);
+  --admin-sidebar-bg: rgba(15, 23, 42, 0.8);
+  --admin-border: rgba(255, 255, 255, 0.08);
+  --admin-accent: linear-gradient(135deg, #00f2ff, #7c3aed);
+  --admin-text: #e5e7eb;
+  --admin-text-muted: rgba(226, 232, 240, 0.7);
+}
+
+.admin-dashboard {
+  width: 100%;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #0b1220, var(--admin-bg));
+  color: var(--admin-text);
+  font-family: 'Inter', sans-serif;
+}
+
+.admin-container {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px;
+  gap: 30px;
+}
+
+.admin-sidebar {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+  background: var(--admin-sidebar-bg);
+  border: 1px solid var(--admin-border);
+  border-radius: 20px;
+  padding: 24px 18px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+  padding: 0 10px;
+}
+
+.brand-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--admin-accent);
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+}
+
+.brand-label {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: linear-gradient(to right, #fff, rgba(255,255,255,0.7));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-tab {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--admin-text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+}
+
+.sidebar-tab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  transform: translateX(4px);
+}
+
+.sidebar-tab.active {
+  background: var(--admin-accent);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+}
+
+.admin-main {
+  min-height: 80vh;
+}
+
+.admin-content {
+  background: var(--admin-card-bg);
+  border: 1px solid var(--admin-border);
+  border-radius: 20px;
+  padding: 35px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(15px);
+}
+
+.admin-section {
+  width: 100%;
+}
+
+.admin-section h2 {
+  margin-top: 40px;
+  margin-bottom: 25px;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-section h2::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--admin-border), transparent);
+}
+
+.admin-section h2:first-child {
+  margin-top: 0;
+}
+
+.no-data {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--admin-text-muted);
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--admin-border);
+  border-radius: 15px;
+}
+
+/* Contacts Specific - Rebuild for Dark Theme */
+.contacts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-card {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid var(--admin-border);
+  border-radius: 16px;
+  padding: 25px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-card:hover {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(0, 242, 255, 0.3);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.contact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.contact-info h3 {
+  margin: 0 0 8px 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.contact-info p {
+  margin: 4px 0;
+  color: var(--admin-text-muted);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.status-select {
+  padding: 10px 16px;
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  transition: all 0.2s;
+}
+
+.status-select.status-new {
+  border-color: #f59e0b;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.status-select.status-read {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.status-select.status-responded {
+  border-color: #10b981;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.contact-message {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  line-height: 1.7;
+  color: #d1d5db;
+  font-size: 15px;
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+.contact-response {
+  background: rgba(16, 185, 129, 0.05);
+  padding: 18px;
+  border-left: 4px solid #10b981;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.contact-response strong {
+  color: #10b981;
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.contact-response p {
+  color: #ecfdf5;
+  margin: 0;
+  line-height: 1.7;
+}
+
+.contact-meta {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 12px;
+  text-align: right;
+  font-family: 'Mono', monospace;
+}
+
+@media (max-width: 1100px) {
+  .admin-container {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .admin-sidebar {
+    position: relative;
+    top: 0;
+    margin-bottom: 30px;
+  }
+  
+  .sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .sidebar-tab {
+    width: auto;
+    flex: 1 0 calc(33% - 12px);
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-content {
+    padding: 24px;
+  }
+
+  .sidebar-tab {
+    flex: 1 0 calc(50% - 12px);
+  }
+  
+  .contact-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .contact-actions {
+    justify-content: flex-start;
+  }
+}
+

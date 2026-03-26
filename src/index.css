@@ -1,0 +1,21 @@
+@import './styles/styles-original.css';
+@import './styles/parallax-original.css';
+@import './styles/responsive-original.css';
+
+/*Component Styles */
+@import './styles/Navbar.css';
+@import './styles/Hero.css';
+@import './styles/About.css';
+@import './styles/Projects.css';
+
+@import './styles/Skills.css';
+@import './styles/Contact.css';
+@import './styles/Footer.css';
+@import './styles/Internships.css';
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #020205;
+    color: #ffffff;
+}

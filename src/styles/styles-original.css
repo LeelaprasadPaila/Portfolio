@@ -1,0 +1,35 @@
+:root {
+    --primary-color: #00f2ff;
+    --secondary-color: #bc13fe;
+    --bg-color: #020205;
+    --bg-dark: #000000;
+    --bg-light: #0a0a1a;
+    --text-color: #ffffff;
+    --text-muted: rgba(240, 244, 248, 0.7);
+    --text-secondary: rgba(240, 244, 248, 0.5);
+    --font-heading: 'Oswald', 'Poppins', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --transition-speed: 0.3s;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}

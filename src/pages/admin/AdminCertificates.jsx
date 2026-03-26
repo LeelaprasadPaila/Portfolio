@@ -1,0 +1,137 @@
+import React, { useState, useEffect } from 'react';
+import {
+  getCertificates,
+  createCertificate,
+  updateCertificate,
+  deleteCertificate,
+} from '../../services/api';
+import AdminForm from '../../components/admin/AdminForm';
+import AdminTable from '../../components/admin/AdminTable';
+
+const AdminCertificates = () => {
+  const [certificates, setCertificates] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '',
+    category: '',
+    description: '',
+    issuer: '',
+    issueDate: '',
+    priority: false,
+    image: null,
+  });
+
+  useEffect(() => {
+    loadCertificates();
+  }, []);
+
+  const loadCertificates = async () => {
+    try {
+      setLoading(true);
+      const data = await getCertificates();
+      setCertificates(Array.isArray(data) ? data : []);
+    } catch (error) {
+      alert('Error loading certificates: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+
+      const formDataObj = new FormData();
+      formDataObj.append('title', formData.title);
+      formDataObj.append('category', formData.category);
+      formDataObj.append('description', formData.description);
+      formDataObj.append('issuer', formData.issuer);
+      formDataObj.append('issueDate', formData.issueDate);
+      formDataObj.append('priority', formData.priority);
+
+      if (formData.image instanceof File) {
+        formDataObj.append('image', formData.image);
+      }
+
+      if (editingId) {
+        await updateCertificate(editingId, formDataObj);
+      } else {
+        await createCertificate(formDataObj);
+      }
+
+      resetForm();
+      loadCertificates();
+    } catch (error) {
+      alert('Error saving certificate: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (confirm('Delete this certificate?')) {
+      try {
+        await deleteCertificate(id);
+        loadCertificates();
+      } catch (error) {
+        alert('Error deleting certificate: ' + error.message);
+      }
+    }
+  };
+
+  const handleEdit = (cert) => {
+    setFormData({ ...cert, image: null });
+    setEditingId(cert._id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      category: '',
+      description: '',
+      issuer: '',
+      issueDate: '',
+      priority: false,
+      image: null,
+    });
+    setEditingId(null);
+  };
+
+  return (
+    <div className="admin-section">
+      <h2>{editingId ? 'Edit' : 'Add'} Certificate</h2>
+      
+      <AdminForm
+        title="Certificate Form"
+        fields={[
+          { name: 'title', label: 'Title', type: 'text', required: true },
+          { name: 'category', label: 'Category', type: 'text', required: true },
+          { name: 'description', label: 'Description', type: 'textarea' },
+          { name: 'issuer', label: 'Issuer', type: 'text' },
+          { name: 'issueDate', label: 'Issue Date', type: 'date' },
+          { name: 'image', label: 'Image', type: 'file', accept: 'image/*' },
+          { name: 'priority', label: 'Priority', type: 'checkbox' },
+        ]}
+        formData={formData}
+        setFormData={setFormData}
+        onSubmit={handleSubmit}
+        isLoading={loading}
+        onCancel={editingId ? resetForm : null}
+        submitText={editingId ? 'Update' : 'Add'}
+      />
+
+      <h2>Certificates List ({certificates.length})</h2>
+      <AdminTable
+        columns={['title', 'category', 'priority']}
+        data={certificates}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+    </div>
+  );
+};
+
+export default AdminCertificates;
