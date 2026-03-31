@@ -1,0 +1,31 @@
+{
+  "name": "portfolio-api",
+  "version": "1.0.0",
+  "description": "Portfolio Backend API",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "init-admin": "node src/scripts/initAdmin.js",
+    "compress-uploads": "node src/scripts/compressUploads.js",
+    "cleanup-contacts": "node src/scripts/cleanupOldContacts.js",
+    "build": "echo 'No build needed'"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.5.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^8.5.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express-validator": "^7.0.0",
+    "nodemailer": "^6.9.5",
+    "multer": "^1.4.4",
+    "path": "^0.12.7",
+    "sharp": "^0.32.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

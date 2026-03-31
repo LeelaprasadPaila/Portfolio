@@ -1,0 +1,703 @@
+Parallax Portfolio Documentation
+
+
+# Parallax Portfolio: Complete Development Guide
+
+Machine Learning Engineer Portfolio with 3D Parallax Effect
+
+## Executive Summary
+
+This document provides a complete roadmap for building an advanced parallax portfolio website showcasing your machine learning and engineering background. The portfolio will feature a stunning 3D parallax mouse-tracking effect that creates an immersive, professional presentation of your projects and skills.
+
+**Key Features:**
+- 3D parallax effect with mouse tracking
+- Reveal animations on page load
+- Fully responsive design (desktop, tablet, mobile)
+- Modern glassmorphism and gradient effects
+- Project showcase section with machine learning focus
+- Contact/CTA section
+- PDF-downloadable portfolio documents
+
+---
+
+## Part 1: Project Structure & File Architecture
+
+### 1.1 Directory Organization
+
+parallax-portfolio/
+├── index.html              # Main HTML file
+├── css/
+│   ├── styles.css          # Main stylesheet
+│   ├── parallax.css        # Parallax-specific styles
+│   └── responsive.css      # Media query styles
+├── js/
+│   ├── parallax.js         # Parallax effect logic
+│   ├── reveal.js           # Reveal animation
+│   └── interactions.js     # Event handlers & utilities
+├── images/
+│   ├── layers/             # Parallax background layers
+│   │   ├── layer-0-bg.png         # Background (farthest)
+│   │   ├── layer-1-mountains.png  # Mountain range 1
+│   │   ├── layer-2-mountains.png  # Mountain range 2
+│   │   ├── layer-3-fog.png        # Fog/mist effect
+│   │   ├── layer-4-trees.png      # Foreground trees
+│   │   ├── layer-5-overlay.png    # Dark overlay vignette
+│   │   └── layer-6-sun-rays.png   # Sun rays (static)
+│   ├── projects/           # Project showcase images
+│   │   ├── project-1-thumb.jpg
+│   │   ├── project-2-thumb.jpg
+│   │   └── project-3-thumb.jpg
+│   └── icons/              # UI icons (Font Awesome or custom)
+├── assets/
+│   ├── fonts/              # Custom fonts (optional)
+│   └── data.json           # Project data (optional)
+├── documents/              # PDF exports
+│   ├── portfolio-resume.pdf
+│   ├── project-case-study.pdf
+│   └── technical-specs.pdf
+└── README.md               # Project documentation
+
+
+### 1.2 Required External Libraries
+
+**For Parallax & Animation:**
+- GSAP (GreenSock Animation Platform) - v3.12.2+
+  - Smooth animations and tweening
+  - MouseMove tracking
+  - Timeline control
+  - Link: https://greensock.com/gsap/
+
+**For Icons:**
+- Font Awesome v6.4+
+  - SVG icons for social links, skills, etc.
+  - Link: https://fontawesome.com/
+
+**For Fonts:**
+- Google Fonts (Poppins, Inter, or Space Mono)
+  - Modern, clean typography
+  - Link: https://fonts.google.com/
+
+**For Responsive:**
+- No external framework (vanilla CSS recommended)
+- CSS Grid and Flexbox for layouts
+- CSS custom properties for theming
+
+---
+
+## Part 2: Image Assets & Design
+
+### 2.1 Parallax Background Layers
+
+You need **7-8 layered PNG images** extracted from your background composition. Here's what each layer represents:
+
+#### Layer Specifications
+
+| Layer | Name | Purpose | Dimensions | Format | Opacity | Z-Index |
+|-------|------|---------|------------|--------|---------|---------|
+| 0 | Background Sky | Farthest static element | 1920×1080px | PNG | 100% | 1 |
+| 1 | Mountains 1 | Slow parallax movement | 1920×1200px | PNG | 100% | 2 |
+| 2 | Mountains 2 | Slow parallax movement | 1920×1200px | PNG | 100% | 3 |
+| 3 | Fog Layer | Medium parallax + opacity | 1920×1100px | PNG | 70% | 4 |
+| 4 | Trees/Foreground | Fast parallax movement | 1920×1000px | PNG | 100% | 5 |
+| 5 | Dark Vignette | Static overlay for depth | 1920×1080px | PNG | 40% | 6 |
+| 6 | Sun Rays | Static (no parallax) | 1920×1080px | PNG | 60% | 7 |
+
+#### How to Extract Layers in Photoshop
+
+**Step 1: Prepare Each Layer**
+- Open your composite image in Photoshop
+- For each layer group, merge visible layers: `Layer > Merge Down` or `Ctrl+E`
+- Add transparent background: `Layer > Transparency > Add Layer Mask`
+
+**Step 2: Export Individual Layers**
+- Select one layer
+- `File > Export As > PNG`
+- Name: `layer-{number}-{name}.png`
+- Ensure "Transparency" is checked
+- Set resolution: 150 DPI (high quality for parallax effects)
+
+**Step 3: Image Optimization**
+- Compress without quality loss using TinyPNG or ImageOptim
+- Target sizes: 300-600KB per layer (total max 3-4MB)
+- Format: PNG with transparency
+
+### 2.2 Project Showcase Images
+
+Create thumbnail images for your machine learning projects:
+
+**Specifications:**
+- Dimensions: 600×400px (3:2 aspect ratio)
+- Format: JPEG or optimized WebP
+- File size: 100-150KB each
+- Style: Consistent with parallax color scheme
+
+**Example Projects to Showcase:**
+1. **Recommendation System** - ML clustering/collaborative filtering
+2. **Sentiment Analysis** - NLP project with visualizations
+3. **Image Classification** - CNN with accuracy metrics
+4. **Time Series Forecasting** - Stock price or sales prediction
+5. **Anomaly Detection** - Outlier detection visualization
+
+### 2.3 Icon Assets
+
+Use Font Awesome CDN for these icons:
+- Social links: LinkedIn, GitHub, Twitter
+- Skills: Python, TensorFlow, React, AWS
+- Navigation: Menu, Search, Download
+
+---
+
+## Part 3: HTML Structure
+
+### 3.1 Main Index.html Template
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pailalee Prasad - ML Engineer Portfolio</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/parallax.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <nav class="navbar-container">
+            <div class="navbar-logo">
+                <span class="logo-text">Pailalee</span>
+                <span class="logo-badge">ML</span>
+            </div>
+            <ul class="navbar-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li class="navbar-search">
+                    <a href="#search"><i class="fas fa-search"></i></a>
+                </li>
+                <li class="navbar-hamburger">
+                    <a href="#menu">
+                        <div class="hamburger-bars">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Parallax Background Section -->
+    <main id="home" class="parallax-container">
+        <!-- Parallax Layers -->
+        <div class="parallax-wrapper">
+            <!-- Background layers (ordered from back to front) -->
+            <img src="images/layers/layer-0-bg.png" class="parallax-layer" data-speed="0.2" alt="Sky background">
+            <img src="images/layers/layer-1-mountains.png" class="parallax-layer" data-speed="0.4" alt="Mountains">
+            <img src="images/layers/layer-2-mountains.png" class="parallax-layer" data-speed="0.6" alt="Mountain range">
+            <img src="images/layers/layer-3-fog.png" class="parallax-layer" data-speed="0.8" alt="Fog effect">
+            <img src="images/layers/layer-4-trees.png" class="parallax-layer" data-speed="1.0" alt="Trees">
+            <div class="parallax-overlay"></div>
+            <img src="images/layers/layer-6-sun-rays.png" class="parallax-static" alt="Sun rays">
+        </div>
+
+        <!-- Hero Content -->
+        <div class="hero-content reveal-on-scroll">
+            <h1 class="hero-title">
+                <span>Pailalee Prasad</span>
+                <span class="title-badge">ML Engineer</span>
+            </h1>
+            <p class="hero-subtitle">Building AI-powered solutions | Machine Learning | Full Stack Development</p>
+            <div class="hero-cta">
+                <a href="#projects" class="btn btn-primary">View My Work</a>
+                <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- About Section -->
+    <section id="about" class="about-section reveal-on-scroll">
+        <div class="container">
+            <h2>About Me</h2>
+            <p>Technical analyst with 1+ years of experience in machine learning and full-stack development. Passionate about building scalable AI solutions and exploring innovative applications of deep learning.</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <h3>1+</h3>
+                    <p>Years Experience</p>
+                </div>
+                <div class="stat-item">
+                    <h3>10+</h3>
+                    <p>ML Projects</p>
+                </div>
+                <div class="stat-item">
+                    <h3>5+</h3>
+                    <p>Technologies</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects-section">
+        <div class="container">
+            <h2>Featured Projects</h2>
+            <div class="projects-grid">
+                <!-- Project Card 1 -->
+                <div class="project-card reveal-on-scroll">
+                    <div class="project-image">
+                        <img src="images/projects/project-1-thumb.jpg" alt="Recommendation System">
+                        <div class="project-overlay">
+                            <a href="#" class="project-link">View Project</a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h3>Recommendation System</h3>
+                        <p>Collaborative filtering model for personalized product recommendations</p>
+                        <div class="project-tags">
+                            <span>Python</span>
+                            <span>ML</span>
+                            <span>Pandas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="project-card reveal-on-scroll">
+                    <div class="project-image">
+                        <img src="images/projects/project-2-thumb.jpg" alt="NLP Sentiment Analysis">
+                        <div class="project-overlay">
+                            <a href="#" class="project-link">View Project</a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h3>Sentiment Analysis</h3>
+                        <p>NLP model for real-time social media sentiment classification</p>
+                        <div class="project-tags">
+                            <span>NLP</span>
+                            <span>TensorFlow</span>
+                            <span>Python</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="project-card reveal-on-scroll">
+                    <div class="project-image">
+                        <img src="images/projects/project-3-thumb.jpg" alt="Image Classification">
+                        <div class="project-overlay">
+                            <a href="#" class="project-link">View Project</a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h3>Image Classification</h3>
+                        <p>CNN model for medical image diagnosis with 95%+ accuracy</p>
+                        <div class="project-tags">
+                            <span>CNN</span>
+                            <span>PyTorch</span>
+                            <span>Computer Vision</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills-section reveal-on-scroll">
+        <div class="container">
+            <h2>Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Machine Learning</h3>
+                    <ul>
+                        <li>Python</li>
+                        <li>TensorFlow</li>
+                        <li>PyTorch</li>
+                        <li>Scikit-learn</li>
+                        <li>NLP</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Web Development</h3>
+                    <ul>
+                        <li>JavaScript</li>
+                        <li>React.js</li>
+                        <li>HTML/CSS</li>
+                        <li>Node.js</li>
+                        <li>REST APIs</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Tools & Platforms</h3>
+                    <ul>
+                        <li>Git/GitHub</li>
+                        <li>Docker</li>
+                        <li>AWS</li>
+                        <li>Jupyter</li>
+                        <li>SQL</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section reveal-on-scroll">
+        <div class="container">
+            <h2>Let's Connect</h2>
+            <p>I'm always interested in hearing about new projects and opportunities.</p>
+            <div class="contact-links">
+                <a href="https://linkedin.com/in/pailaleelaprasad" class="social-link">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="https://github.com/pailaleelaprasad" class="social-link">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="mailto:your.email@example.com" class="social-link">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+                <a href="#" class="btn btn-primary">Download Resume (PDF)</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Pailalee Prasad. All rights reserved. | <a href="#">Privacy Policy</a></p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="js/parallax.js"></script>
+    <script src="js/reveal.js"></script>
+    <script src="js/interactions.js"></script>
+</body>
+</html>
+
+---
+
+## Part 4: CSS Styling
+
+### 4.1 Main Styles (styles.css)
+
+**Key Sections:**
+- CSS Custom Properties (design tokens)
+- Typography and base styles
+- Component styles (buttons, cards, navbar)
+- Layout utilities
+
+### 4.2 Parallax Styles (parallax.css)
+
+**Key Features:**
+- Parallax container positioning
+- Layer absolute positioning
+- Transform origin settings for smooth movement
+- Z-index layering system
+- Hero content positioning
+
+### 4.3 Responsive Styles (responsive.css)
+
+**Breakpoints:**
+- Mobile: 320px - 480px
+- Tablet: 481px - 768px
+- Desktop: 769px+
+
+**Mobile Parallax Adjustments:**
+- Reduced parallax movement intensity (40% of desktop)
+- Simpler parallax on touch devices
+- Optimized touch navigation
+- Smaller images on mobile
+
+---
+
+## Part 5: JavaScript Implementation
+
+### 5.1 Parallax Effect (parallax.js)
+
+**Core Logic:**
+// Mouse move event listener
+// Track mouse position (x, y)
+// Calculate offset based on mouse position
+// Apply CSS transforms to parallax layers
+// Use GSAP for smooth animations
+// Handle throttling for performance
+
+Key Functions:
+- initParallax() - Initialize parallax elements
+- onMouseMove(e) - Handle mouse tracking
+- updateParallaxLayers(x, y) - Update layer positions
+- resetParallax() - Reset on mouse leave
+
+**Performance Optimization:**
+- Throttle mousemove events (60fps)
+- Use `transform: translate3d()` for GPU acceleration
+- Avoid layout thrashing
+- Use CSS `will-change` property strategically
+
+### 5.2 Reveal Animation (reveal.js)
+
+**Features:**
+- Elements slide in from bottom on page load
+- Staggered animation for visual flow
+- Trigger on scroll using Intersection Observer API
+- Smooth easing (ease-out-cubic)
+
+**Implementation:**
+// Intersection Observer for scroll triggers
+// GSAP timeline for sequential animations
+// Fade + translate from bottom effect
+// 0.6-1.0s duration per element
+
+### 5.3 Interactions (interactions.js)
+
+**Features:**
+- Hamburger menu toggle
+- Smooth scroll navigation
+- Navbar toggle on scroll
+- Search functionality (optional)
+- Keyboard navigation support
+
+---
+
+## Part 6: Technical Specifications
+
+### 6.1 Browser Compatibility
+
+- Chrome/Edge: Latest 2 versions
+- Firefox: Latest 2 versions
+- Safari: Latest 2 versions
+- Mobile browsers: iOS Safari 14+, Android Chrome 90+
+
+### 6.2 Performance Targets
+
+| Metric | Target |
+|--------|--------|
+| Lighthouse Performance | 85+ |
+| First Contentful Paint | < 1.5s |
+| Largest Contentful Paint | < 2.5s |
+| Cumulative Layout Shift | < 0.1 |
+| Total Page Size | < 5MB |
+| Image Assets | < 3.5MB |
+
+### 6.3 Accessibility Standards
+
+- WCAG 2.1 Level AA compliance
+- Semantic HTML structure
+- ARIA labels for interactive elements
+- Keyboard navigation support
+- Color contrast ratio 4.5:1 for text
+- Reduced motion support (`prefers-reduced-motion`)
+
+---
+
+## Part 7: Development Workflow
+
+### Phase 1: Asset Preparation (3-4 days)
+
+**Tasks:**
+1. [ ] Extract parallax layers from Photoshop
+2. [ ] Optimize and compress images
+3. [ ] Create project thumbnail images
+4. [ ] Prepare icon assets
+5. [ ] Create color palette and typography standards
+
+### Phase 2: HTML & CSS (3-5 days)
+
+**Tasks:**
+1. [ ] Build semantic HTML structure
+2. [ ] Implement responsive layouts (mobile-first)
+3. [ ] Style components (buttons, cards, navbar)
+4. [ ] Create parallax styling
+5. [ ] Build responsive utilities
+
+### Phase 3: JavaScript & Interactions (3-4 days)
+
+**Tasks:**
+1. [ ] Implement parallax effect
+2. [ ] Add reveal animations
+3. [ ] Build navigation interactions
+4. [ ] Optimize performance
+5. [ ] Test across browsers
+
+### Phase 4: Content & Polish (2-3 days)
+
+**Tasks:**
+1. [ ] Write compelling copy
+2. [ ] Add actual project descriptions
+3. [ ] Implement contact form
+4. [ ] Create PDF downloads
+5. [ ] Add meta tags and SEO
+
+### Phase 5: Testing & Deployment (2-3 days)
+
+**Tasks:**
+1. [ ] Responsive testing on devices
+2. [ ] Performance optimization
+3. [ ] Accessibility audit
+4. [ ] Cross-browser testing
+5. [ ] Deploy to GitHub Pages
+6. [ ] Setup custom domain (optional)
+
+---
+
+## Part 8: PDF Documents to Create
+
+### 8.1 Resume/CV PDF
+- 1-page format
+- Professional design matching website
+- Machine learning skills highlighted
+- Links to GitHub and portfolio projects
+
+### 8.2 Project Case Study PDF
+- Detailed writeup of flagship ML project
+- Problem statement, methodology, results
+- Code snippets and visualizations
+- Performance metrics and impact
+
+### 8.3 Technical Specifications PDF
+- Architecture overview
+- Technology stack
+- Machine learning models used
+- Scalability considerations
+
+**Tools for PDF generation:**
+- JavaScript: `html2pdf.js` library or `jsPDF`
+- Python backend: `WeasyPrint` or `ReportLab`
+- Online: Figma → PDF export
+
+---
+
+## Part 9: Deployment & Hosting
+
+### 9.1 GitHub Pages (Recommended)
+
+**Steps:**
+1. Create GitHub repository: `pailaleelaprasad.github.io`
+2. Push code to main branch
+3. Enable GitHub Pages in repository settings
+4. Site automatically deployed to `https://pailaleelaprasad.github.io`
+
+### 9.2 Custom Domain Setup
+
+**Steps:**
+1. Purchase domain from Namecheap, GoDaddy, or similar
+2. Add DNS records pointing to GitHub Pages
+3. Update GitHub Pages settings with custom domain
+4. Enable HTTPS (automatic with GitHub Pages)
+
+### 9.3 Domain Configuration
+
+DNS Records for Custom Domain:
+A Record: 185.199.108.153
+A Record: 185.199.109.153
+A Record: 185.199.110.153
+A Record: 185.199.111.153
+CNAME: www → [your-username].github.io
+
+---
+
+## Part 10: Essential Checklist
+
+### Pre-Launch Checklist
+
+**Assets & Content:**
+- [ ] All 7-8 parallax layers optimized and in place
+- [ ] Project thumbnail images created
+- [ ] Social media links verified
+- [ ] Resume PDF created and updated
+- [ ] Project descriptions written
+
+**Code Quality:**
+- [ ] HTML valid (W3C validation)
+- [ ] CSS no console errors
+- [ ] JavaScript optimized and minified
+- [ ] No console warnings or errors
+- [ ] GSAP animations smooth (60fps)
+
+**Performance:**
+- [ ] Images optimized (< 500KB each)
+- [ ] Total page size < 5MB
+- [ ] Lighthouse score > 85
+- [ ] Mobile responsive tested
+- [ ] Touch interactions working
+
+**Accessibility:**
+- [ ] WCAG 2.1 AA compliant
+- [ ] Keyboard navigation works
+- [ ] Color contrast adequate
+- [ ] Alt text on all images
+- [ ] Focus indicators visible
+
+**Browser Testing:**
+- [ ] Chrome (desktop & mobile)
+- [ ] Firefox
+- [ ] Safari
+- [ ] Edge
+- [ ] Mobile Safari (iOS)
+- [ ] Chrome Mobile (Android)
+
+**SEO & Meta:**
+- [ ] Meta description added
+- [ ] Open Graph tags configured
+- [ ] robots.txt created
+- [ ] sitemap.xml created
+- [ ] Structured data (JSON-LD) added
+
+---
+
+## Part 11: Future Enhancements
+
+### Phase 2 Features (Post-Launch)
+
+1. **Blog Section** - Share ML insights and tutorials
+2. **Interactive Demos** - Live ML model predictions
+3. **Newsletter Signup** - Contact list growth
+4. **Dark/Light Mode** - User preference toggle
+5. **Multi-language** - English, Hindi support
+6. **Analytics** - Google Analytics or Plausible
+7. **Search Bar** - Site-wide search functionality
+8. **Testimonials** - Client/mentor recommendations
+
+---
+
+## References & Resources
+
+**Parallax Implementation:**
+[1] GSAP Official Documentation. (2025). GreenSock Animation Platform. https://greensock.com/gsap/
+
+[2] True Coder. (2022). 3D Parallax Effect Tutorial. YouTube. https://www.youtube.com/watch?v=Yo3j_Dx4u7c
+
+[3] Dora.run. (2024). Parallax Effect Web Design Guide. https://www.dora.run/blog/11-website-examples-that-wow-visitors-with-parallax-effect
+
+**Machine Learning Portfolio:**
+[4] Project Pro. (2024). 50 ML Project Ideas with Source Code. https://www.projectpro.io/article/ml-projects-ideas-with-source-code/474
+
+[5] Pesto Tech. (2023). Best Machine Learning Engineering Portfolio Projects. https://pesto.tech/resources/5-best-machine-learning-engineering-portfolio-projects
+
+**Web Standards:**
+[6] W3C. (2025). Web Content Accessibility Guidelines (WCAG) 2.1. https://www.w3.org/WAI/WCAG21/quickref/
+
+[7] Web.dev. (2025). Web Vitals Guidelines. https://web.dev/vitals/
+
+**Design & Performance:**
+[8] Mozilla. (2025). MDN Web Docs - CSS Transforms. https://developer.mozilla.org/en-US/docs/Web/CSS/transform
+
+[9] Awwwards. (2025). Best Parallax Website Designs. https://www.awwwards.com/websites/parallax/
+
