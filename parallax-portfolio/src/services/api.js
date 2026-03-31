@@ -1,3 +1,4 @@
+import { STORAGE_KEYS } from '../data/dataStore';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // Token management
@@ -170,3 +171,27 @@ export default {
   setAuthToken,
   clearAuthToken,
 };
+// Generic sync helpers for the Admin panel
+export const createOne = async (key, item) => {
+  const map = {
+    [STORAGE_KEYS.PROJECTS]: '/projects',
+    [STORAGE_KEYS.CERTS]: '/certificates',
+    [STORAGE_KEYS.INTERNSHIPS]: '/internships',
+    [STORAGE_KEYS.TECH_SKILLS]: '/skills',
+    [STORAGE_KEYS.BIO]: '/bio',
+  };
+  return apiCall(map[key], { method: 'POST', body: JSON.stringify(item) });
+};
+
+export const updateById = async (key, id, item) => {
+  const map = {
+    [STORAGE_KEYS.PROJECTS]: `/projects/${id}`,
+    [STORAGE_KEYS.CERTS]: `/certificates/${id}`,
+    [STORAGE_KEYS.INTERNSHIPS]: `/internships/${id}`,
+    [STORAGE_KEYS.TECH_SKILLS]: `/skills/${id}`,
+    [STORAGE_KEYS.BIO]: `/bio`,
+  };
+  return apiCall(map[key], { method: 'PUT', body: JSON.stringify(item) });
+};
+
+export { STORAGE_KEYS };

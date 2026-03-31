@@ -108,9 +108,28 @@ const Admin = ({ onNavClick }) => {
     const handleSave = async (key, data, msg, apiCall) => {
         setLoading(true);
         try {
-            // If an API call is provided, use it to persist to MongoDB
+            // If an API call is provided (for bulk sync or Bio), use it
             if (apiCall) {
-                await apiCall(data);
+                // If it's the Bio/Static update (single object)
+                if (key === STORAGE_KEYS.BIO) {
+                    await apiCall(data);
+                } else {
+                    // For Lists (Projects, Certs, Internships)
+                    // We sync each item to ensure they are properly handled by the backend
+                    for (const item of data) {
+                        try {
+                            if (item._id) {
+                                // Update existing
+                                await api.updateById(key, item._id, item);
+                            } else {
+                                // Create new
+                                await api.createOne(key, item);
+                            }
+                        } catch (err) {
+                            console.warn(`Sync failed for item in ${key}:`, err);
+                        }
+                    }
+                }
             }
             
             // Always update local state too
