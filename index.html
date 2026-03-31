@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Ecosystem | Paila Leela Prasad</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-blue: #00f2ff;
+            --deep-space: #050a0f;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--deep-space);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0a192f 0%, #050a0f 100%);
+        }
+
+        .portal-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+            animation: fadeIn 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 4px;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, #fff, var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+        }
+
+        .links-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .launcher-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 2rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .launcher-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--neon-blue);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.15);
+        }
+
+        .launcher-btn i {
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            text-align: left;
+        }
+
+        .btn-title {
+            display: block;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .btn-desc {
+            display: block;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+            margin-top: 2px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .footer {
+            margin-top: 3rem;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="bg-canvas"></div>
+    
+    <div class="portal-container">
+        <h1>PORTFOLIO SYSTEM</h1>
+        <p>Dynamic deployment architecture with MongoDB backend and parallax frontend engine.</p>
+        
+        <div class="links-grid">
+            <a href="/parallax-portfolio" class="launcher-btn">
+                <div class="btn-content">
+                    <i class="fas fa-rocket"></i>
+                    <div>
+                        <span class="btn-title">Frontend Engine</span>
+                        <span class="btn-desc">Interactive portfolio UI (Redirect)</span>
+                    </div>
+                </div>
+                <div class="status-dot"></div>
+            </a>
+
+            <a href="https://portfolio-backend-jndb.onrender.com/api/projects" class="launcher-btn" target="_blank">
+                <div class="btn-content">
+                    <i class="fas fa-server"></i>
+                    <div>
+                        <span class="btn-title">Core Backend</span>
+                        <span class="btn-desc">Live REST API & MongoDB Service</span>
+                    </div>
+                </div>
+                <i class="fas fa-external-link-alt" style="font-size: 0.8rem; opacity: 0.5;"></i>
+            </a>
+
+            <a href="/parallax-portfolio/src/components/Admin.jsx" class="launcher-btn">
+                <div class="btn-content">
+                    <i class="fas fa-shield-halved"></i>
+                    <div>
+                        <span class="btn-title">Admin Terminal</span>
+                        <span class="btn-desc">Secure dashboard access</span>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="opacity: 0.3;"></i>
+            </a>
+        </div>
+
+        <div class="footer">
+            PAILA LEELA PRASAD // SYSTEM VERSION 3.2.0
+        </div>
+    </div>
+</body>
+</html>
