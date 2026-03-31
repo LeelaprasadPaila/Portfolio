@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { getData, saveData, STORAGE_KEYS } from '../data/dataStore';
+import { getData, STORAGE_KEYS } from '../data/dataStore';
+import * as api from '../services/api';
 import '../styles/Admin.css';
 
 const Admin = ({ onNavClick }) => {
-    const [password, setPassword] = useState('');
+    const [credentials, setCredentials] = useState({ username: 'admin', password: '' });
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [activeTab, setActiveTab] = useState('bio');
     const [notification, setNotification] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     // Data States
     const [bio, setBio] = useState({});
@@ -54,13 +56,47 @@ const Admin = ({ onNavClick }) => {
         return y;
     };
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        if (btoa(password) === "cGFpbGFsZWVsYTEyMw==") {
-            setIsAuthenticated(true);
-            showNotification('SYSTEM ACCESS GRANTED', 'success');
-        } else {
-            showNotification('ACCESS DENIED', 'error');
+        setLoading(true);
+        try {
+            const data = await api.loginAdmin(credentials.username, credentials.password);
+            if (data.token) {
+                api.setAuthToken(data.token);
+                setIsAuthenticated(true);
+                showNotification('SYSTEM ACCESS GRANTED', 'success');
+                fetchData();
+            }
+        } catch (err) {
+            console.error('Login failed:', err);
+            showNotification('ACCESS DENIED: ' + err.message, 'error');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            // Bio
+            try { const b = await api.getBio(); if (b) setBio(b); } catch (e) { setBio(getData(STORAGE_KEYS.BIO)); }
+            // Projects
+            try { const p = await api.getProjects(); if (p) setProjects(p); } catch (e) { setProjects(getData(STORAGE_KEYS.PROJECTS)); }
+            // Certs
+            try { const c = await api.getCertificates(); if (c) setCerts(c); } catch (e) { setCerts(getData(STORAGE_KEYS.CERTS)); }
+            // Internships
+            try { const i = await api.getInternships(); if (i) setInternships(i); } catch (e) { setInternships(getData(STORAGE_KEYS.INTERNSHIPS)); }
+            // Skills
+            try { const s = await api.getSkills(); if (s) setSkills(s); } catch (e) { setSkills(getData(STORAGE_KEYS.SKILLS)); }
+            
+            // Other static stats
+            setTechSkills(getData(STORAGE_KEYS.TECH_SKILLS));
+            setInterests(getData(STORAGE_KEYS.INTERESTS));
+            setTestimonials(getData(STORAGE_KEYS.TESTIMONIALS));
+            setStats(getData(STORAGE_KEYS.STATS));
+
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -69,25 +105,21 @@ const Admin = ({ onNavClick }) => {
         setTimeout(() => setNotification(null), 3000);
     };
 
-    const handleSave = (key, data, msg) => {
-        saveData(key, data);
-
-        // Auto-update metrics counts in the storage too
-        if (key === STORAGE_KEYS.CERTS || key === STORAGE_KEYS.PROJECTS || key === STORAGE_KEYS.INTERNSHIPS) {
-            const currentStats = getData(STORAGE_KEYS.STATS);
-            const updatedStats = currentStats.map(s => {
-                const currentInternships = getData(STORAGE_KEYS.INTERNSHIPS) || [];
-                if (s.label === 'Certificates') return { ...s, value: certs.length };
-                if (s.label === 'Projects') return { ...s, value: projects.length };
-                if (s.label === 'Internships') return { ...s, value: currentInternships.filter(i => i.type === 'Internship').length };
-                if (s.label === 'Experience') return { ...s, value: currentInternships.filter(i => i.type === 'Experience').length };
-                return s;
-            });
-            saveData(STORAGE_KEYS.STATS, updatedStats);
-            setStats(updatedStats);
+    const handleSave = async (key, data, msg, apiCall) => {
+        setLoading(true);
+        try {
+            // If an API call is provided, use it to persist to MongoDB
+            if (apiCall) {
+                await apiCall(data);
+            }
+            
+            // Always update local state too
+            showNotification(msg || 'Changes Synced to Mainframe.');
+        } catch (err) {
+            showNotification('SYNC FAILED: ' + err.message, 'error');
+        } finally {
+            setLoading(false);
         }
-
-        showNotification(msg || 'Changes Synced to Mainframe.');
     };
 
     // Auto-sync stats state when certs or projects lengths change
@@ -115,13 +147,24 @@ const Admin = ({ onNavClick }) => {
                     <h1>SECURE ACCESS</h1>
                     <form onSubmit={handleLogin}>
                         <input
+                            type="text"
+                            className="admin-input"
+                            placeholder="Username"
+                            value={credentials.username}
+                            onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                            required
+                        />
+                        <input
                             type="password"
                             className="admin-input"
-                            placeholder="Enter Key..."
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Password"
+                            value={credentials.password}
+                            onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                            required
                         />
-                        <button type="submit" className="save-btn" style={{ width: '100%' }}>ESTABLISH LINK</button>
+                        <button type="submit" className="save-btn" style={{ width: '100%' }} disabled={loading}>
+                            {loading ? 'ESTABLISHING...' : 'ESTABLISH LINK'}
+                        </button>
                     </form>
                     <button
                         onClick={() => onNavClick('home')}
@@ -303,11 +346,9 @@ const Admin = ({ onNavClick }) => {
                         </div>
                     )}
 
-                    {/* PROJECTS */}
+                    {/* REDUNDANT BLOCK REMOVAL */}
                     {activeTab === 'projects' && (
-                        <div className="admin-section-card">
-                            {/* existing projects UI unchanged */}
-                        </div>
+                        <div className="admin-section-card" style={{ display: 'none' }}></div>
                     )}
 
                     {/* INTERNSHIPS */}
@@ -387,7 +428,7 @@ const Admin = ({ onNavClick }) => {
                                     );
                                 })}
                                 <button className="add-btn" onClick={() => setInternships([...internships, { company: '', role: '', duration: '', desc: '', image: '', link: '' }])}>+ ADD INTERNSHIP</button>
-                                <button className="save-btn" style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 1000, boxShadow: '0 0 30px rgba(0, 242, 255, 0.4)' }} onClick={() => handleSave(STORAGE_KEYS.INTERNSHIPS, internships, 'Internships Synced.')}>SYNC INTERNSHIPS</button>
+                                <button className="save-btn" style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 1000, boxShadow: '0 0 30px rgba(0, 242, 255, 0.4)' }} onClick={() => handleSave(STORAGE_KEYS.INTERNSHIPS, internships, 'Internships Synced.', api.createInternship)}>SYNC INTERNSHIPS</button>
                             </div>
                         </div>
                     )}
@@ -492,7 +533,7 @@ const Admin = ({ onNavClick }) => {
                                 link: '#',
                                 meta: 'Python | React'
                             }, ...projects])}>+ DEPLOY NEW PROJECT ENTRY</button>
-                            <button className="save-btn" style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 1000, boxShadow: '0 0 30px rgba(0, 242, 255, 0.4)' }} onClick={() => handleSave(STORAGE_KEYS.PROJECTS, projects, 'Projects Mainframe Synchronized.')}>SYNC PROJECT DATA</button>
+                            <button className="save-btn" style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 1000, boxShadow: '0 0 30px rgba(0, 242, 255, 0.4)' }} onClick={() => handleSave(STORAGE_KEYS.PROJECTS, projects, 'Projects Mainframe Synchronized.', api.createProject)}>SYNC PROJECT DATA</button>
                         </div>
                     )}
 
@@ -610,7 +651,7 @@ const Admin = ({ onNavClick }) => {
                             <button
                                 className="save-btn"
                                 style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 1000, boxShadow: '0 0 30px rgba(0, 242, 255, 0.4)' }}
-                                onClick={() => handleSave(STORAGE_KEYS.CERTS, certs, 'Credentials Mainframe Updated.')}
+                                onClick={() => handleSave(STORAGE_KEYS.CERTS, certs, 'Credentials Mainframe Updated.', api.createCertificate)}
                             >
                                 DEPLOY CREDENTIALS
                             </button>

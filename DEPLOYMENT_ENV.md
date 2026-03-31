@@ -1,56 +1,45 @@
-ī# Render Deployment Guide - Environment Variables
+# Render Deployment Guide - Environment Variables (MongoDB & Dynamic)
 
-To successfully deploy your portfolio and ensure it works dynamically, please set the following environment variables in the Render dashboard for each service.
+To successfully deploy your portfolio to **Render** and ensure it works dynamically with **MongoDB**, follow these steps to add the environment variables in the Render dashboard.
 
 ---
 
-## 🏗️ 1. Backend Deployment (Web Service)
-
-### A. Environment Variables
-In the **Render Dashboard → Your Backend Service → Environment**, add these keys:
+## 🏗️ 1. Backend Service (Render Web Service)
+Add these variables in **Render Dashboard → Your Backend → Environment**:
 
 | Key | Value (Example) | Description |
 | :--- | :--- | :--- |
 | `NODE_ENV` | `production` | Enables production mode. |
-| `PORT` | `10000` | Port for the backend (Render usually sets this automatically). |
-| `MONGODB_URI` | `mongodb+srv://user:pass@cluster.mongodb.net/dbname` | Your MongoDB connection string. |
-| `JWT_SECRET` | `your_long_random_secret_string` | Secret key for admin login. |
-| `FRONTEND_URL` | `https://your-portfolio.onrender.com` | URL of your deployed frontend (Static Site). |
+| `PORT` | `10000` | Port for the backend (usually set automatically by Render). |
+| `FRONTEND_URL` | `https://your-portfolio.onrender.com` | The URL of your deployed frontend (Vercel, Render, etc.). |
 | `FRONTEND_PROD_URL`| `https://your-portfolio.onrender.com` | Duplicate of FRONTEND_URL. |
-
-### ⚠️ Note on Persistent Uploads
-Files uploaded via the Admin panel (images, certificates) are saved to the `backend/uploads/` folder. **On Render, these files will be DELETED every time the service restarts** unless you:
-1.  **Add a Disk**: In Render Dashboard → Disks, create a disk and mount it to `/opt/render/project/src/backend/uploads` (or the equivalent path where your app is running).
-2.  **Use Cloudinary**: Alternatively, you can modify the code to use Cloudinary for persistent image hosting.
+| **`MONGODB_URI`** | `mongodb+srv://admin:pass@cluster.mongodb.net/portfolio` | **CRITICAL**: Your MongoDB connection string. |
+| `JWT_SECRET` | `your_long_random_secret_string` | Secret key for secure admin login. |
+| `ADMIN_USERNAME` | `admin` | Username for your admin dashboard. |
+| `ADMIN_PASSWORD` | `your_secure_password` | Password for your admin dashboard. |
 
 ---
 
-## 🌐 2. Frontend Deployment (Static Site)
-
-### A. Environment Variables
-In the **Render Dashboard → Your Frontend Service → Environment**, add these keys:
+## 🌐 2. Frontend Service (Render Static Site)
+Add these variables in **Render Dashboard → Your Frontend → Environment**:
 
 | Key | Value (Example) | Description |
 | :--- | :--- | :--- |
 | `VITE_API_URL` | `https://your-backend.onrender.com/api` | The API endpoint of your deployed backend. |
-| `VITE_API_BASE_URL`| `https://your-backend.onrender.com` | The base URL of your backend (no `/api`). |
-
-### B. Build Settings
--   **Build Command**: `npm run build`
--   **Publish Directory**: `dist`
+| `VITE_API_BASE_URL`| `https://your-backend.onrender.com` | The root URL of your backend (required for image resolution). |
 
 ---
 
-## 🧪 Testing Locally vs Production
-The code is already configured to be dynamic:
--   **Frontend**: `src/services/api.js` uses `import.meta.env.VITE_API_URL` with a fallback to `localhost:5000`.
--   **Backend**: `src/server.js` uses `process.env.FRONTEND_URL` for CORS and dynamically serves the `/uploads` folder.
+## 🛠️ Dynamic Data & Image Support
+The project is now fully dynamic:
+1.  **MongoDB Sync**: The backend automatically looks for the `MONGODB_URI`. If set, it will persist all your Projects, Certificates, and Bio details to the database.
+2.  **Persistent Uploads**: On the Render Backend service, you **MUST** go to **Disks** and create a persistent disk mounted at `/opt/render/project/src/backend/uploads` (or equivalent) to ensure your uploaded images don't get deleted on every restart.
+3.  **Real-time Admin**: The Admin Panel (once refactored) will push updates directly to the MongoDB backend, allowing you to manage your portfolio from any browser.
 
-**Summary of Image Loading Logic**:
--   Paths starting with `images/` are loaded from the frontend's `public` folder.
--   All other paths are resolved by the backend URL: `VITE_API_URL` (stripped of `/api`) + `/uploads/` + filename.
+---
 
-### 🚀 Implementation Status
-✅ Frontend code is fully dynamic.
-✅ Backend code is fully dynamic.
-✅ `.gitignore` updated to exclude development `.env` files.
+## 🚀 How to set up MongoDB Atlas (if you haven't)
+1.  Create a free cluster at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+2.  Under **Network Access**, allow access from anywhere (`0.0.0.0/0`) or just Render's IP addresses.
+3.  Under **Database Access**, create a user with "Read and Write to any database" permissions.
+4.  Copy the connection string (e.g., `mongodb+srv://...`) and paste it into Render’s `MONGODB_URI` variable.
