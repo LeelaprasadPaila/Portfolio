@@ -29,12 +29,16 @@ const About = ({ isActive, onClose }) => {
         setAboutData(getData(STORAGE_KEYS.BIO));
       }
 
-      // Calculate Dynamic Stats
+      // Calculate Dynamic Stats - ensure we have arrays even if API fails
+      const projectsArray = Array.isArray(projects) ? projects : [];
+      const certsArray = Array.isArray(certs) ? certs : [];
+      const internshipsArray = Array.isArray(internships) ? internships : [];
+
       const dynamicStats = [
-        { label: "Certificates", value: certs.length },
-        { label: "Projects", value: projects.length },
-        { label: "Internships", value: internships.filter(i => i.type === 'Internship').length },
-        { label: "Experience", value: internships.filter(i => i.type === 'Experience').length }
+        { label: "Certificates", value: certsArray.length },
+        { label: "Projects", value: projectsArray.length },
+        { label: "Internships", value: internshipsArray.filter(i => i.type === 'Internship').length },
+        { label: "Experience", value: internshipsArray.filter(i => i.type === 'Experience').length }
       ];
       setStats(dynamicStats);
 

@@ -4,8 +4,27 @@ import path from 'path';
 
 export const getProjects = async (req, res) => {
   try {
-    const projects = await Project.find().sort({ priority: -1, createdAt: -1 });
-    res.json(projects);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 100;
+    const skip = (page - 1) * limit;
+
+    const projects = await Project.find()
+      .lean()
+      .sort({ priority: -1, createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const total = await Project.countDocuments();
+
+    res.json({
+      projects,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit)
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: error.message, error: true });
   }
@@ -13,7 +32,7 @@ export const getProjects = async (req, res) => {
 
 export const createProject = async (req, res) => {
   try {
-    const { category, title, desc, link, meta, priority } = req.body;
+    const { category, title, desc, link, githubLink, videoUrl, meta, priority } = req.body;
 
     if (!category || !title) {
       return res.status(400).json({ message: 'Category and title are required', error: true });
@@ -24,6 +43,8 @@ export const createProject = async (req, res) => {
       title,
       desc,
       link,
+      githubLink,
+      videoUrl,
       meta,
       priority: priority === 'true' || priority === true,
     };
@@ -49,12 +70,14 @@ export const updateProject = async (req, res) => {
       return res.status(404).json({ message: 'Project not found', error: true });
     }
 
-    const { category, title, desc, link, meta, priority } = req.body;
+    const { category, title, desc, link, githubLink, videoUrl, meta, priority } = req.body;
 
     project.category = category || project.category;
     project.title = title || project.title;
     project.desc = desc || project.desc;
     project.link = link || project.link;
+    project.githubLink = githubLink !== undefined ? githubLink : project.githubLink;
+    project.videoUrl = videoUrl !== undefined ? videoUrl : project.videoUrl;
     project.meta = meta || project.meta;
     project.priority = priority !== undefined ? (priority === 'true' || priority === true) : project.priority;
 

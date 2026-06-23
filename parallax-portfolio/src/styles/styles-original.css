@@ -33,3 +33,29 @@ a {
 ul {
     list-style: none;
 }
+
+/* Global Section Title Styles */
+.section-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: var(--font-heading);
+    text-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 60%;
+    background: linear-gradient(to bottom, var(--primary-color), transparent);
+    border-radius: 2px;
+}

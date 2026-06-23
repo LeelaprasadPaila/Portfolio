@@ -76,7 +76,7 @@ const Hero = ({ onExploreClick }) => {
         <main id="home" className="parallax-container active-view" ref={containerRef} onMouseMove={handleMouseMove}>
             <div id="video-background" className="video-background">
                 <video autoPlay muted loop playsInline id="bg-video">
-                    <source src="images/Bg.mp4" type="video/mp4" />
+                    <source src="/images/Bg.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
                 <div className="video-overlay"></div>
@@ -93,9 +93,8 @@ const Hero = ({ onExploreClick }) => {
                 <p className="hero-subtitle">Engineering the Future with Machine Learning & Deep Learning</p>
                 <div className="hero-cta">
                     <a
-                        href="#projects"
+                        href="/projects"
                         className="btn btn-primary"
-                        data-target="projects"
                         onClick={(e) => {
                             e.preventDefault();
                             onExploreClick('projects');
@@ -105,9 +104,8 @@ const Hero = ({ onExploreClick }) => {
                         <span className="btn-text">Explore Projects</span>
                     </a>
                     <a
-                        href="#contact"
+                        href="/contact"
                         className="btn btn-secondary"
-                        data-target="contact"
                         onClick={(e) => {
                             e.preventDefault();
                             onExploreClick('contact');
@@ -117,12 +115,11 @@ const Hero = ({ onExploreClick }) => {
                         <span className="btn-text">Get in Touch</span>
                     </a>
                     <a
-                        href="#internships"
+                        href="/experience"
                         className="btn btn-secondary"
-                        data-target="internships"
                         onClick={(e) => {
                             e.preventDefault();
-                            onExploreClick('internships');
+                            onExploreClick('experience');
                         }}
                     >
                         <span className="btn-icon"><i className="fas fa-briefcase"></i></span>

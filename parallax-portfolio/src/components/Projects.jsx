@@ -2,31 +2,33 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { getData, STORAGE_KEYS } from '../data/dataStore';
 import { getProjects, getFileUrl } from '../services/api';
 import NeuralBackground from './NeuralBackground';
-import gsap from 'gsap';
 import '../styles/Projects.css';
 
 const Projects = ({ isActive, onClose }) => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [allProjects, setAllProjects] = useState([]);
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState('All');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const scrollRef = useRef({});
-  const autoSlideInterval = useRef(null);
 
   const loadProjects = useCallback(async () => {
     setLoading(true);
+    setError(null);
+
     try {
       const data = await getProjects();
-      if (Array.isArray(data) && data.length > 0) {
-        setAllProjects(data);
+      const projects = Array.isArray(data) ? data : (data?.projects || []);
+      if (projects.length > 0) {
+        setAllProjects(projects);
       } else {
-        throw new Error('No projects found');
+        throw new Error('No projects available');
       }
     } catch (err) {
       console.warn('Projects API load failed, falling back to local data.', err);
       const data = getData(STORAGE_KEYS.PROJECTS);
       setAllProjects(Array.isArray(data) ? data : []);
+      setError('Unable to load live project data. Showing local portfolio fallback.');
     } finally {
       setLoading(false);
     }
@@ -38,109 +40,29 @@ const Projects = ({ isActive, onClose }) => {
     }
   }, [isActive, loadProjects]);
 
-  const categories = ["All", ...new Set(allProjects.map(p => p.category))];
+  const categories = useMemo(() => {
+    return ['All', ...new Set(allProjects.map((project) => project.category || 'Other'))];
+  }, [allProjects]);
 
-  // Logic to determine which categories to show
-  // If "All" is selected, show grouped categories (except "All" itself as a group)
-  // If a specific category is selected, just show that one.
-  const projectGroups = useMemo(() => {
-    if (allProjects.length === 0) return [];
-
-    if (activeCategory !== "All") {
-      const projects = allProjects.filter(p => p.category === activeCategory);
-      return projects.length > 0 ? [{ title: activeCategory, projects }] : [];
-    } else {
-      // Show all categories separately
-      const distinctCats = [...new Set(allProjects.map(p => p.category))];
-      return distinctCats.map(cat => ({
-        title: cat,
-        projects: allProjects.filter(p => p.category === cat)
-      }));
-    }
+  const filteredProjects = useMemo(() => {
+    if (activeCategory === 'All') return allProjects;
+    return allProjects.filter((project) => project.category === activeCategory);
   }, [allProjects, activeCategory]);
 
-  // Keyboard support 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (!isActive) return;
+  const featuredCount = allProjects.filter((project) => project.priority === true || project.priority === 'true').length;
+  const liveCount = allProjects.filter((project) => project.link && project.link !== '#').length;
 
-      const key = e.key.toLowerCase();
+  const scrollAction = (dir, groupKey) => {
+    const container = scrollRef.current[groupKey];
+    if (!container) return;
 
-      // ESC to close modal (if open) or close section
-      if (e.key === 'Escape') {
-        if (selectedProject) {
-          setSelectedProject(null);
-        } else {
-          onClose();
-        }
-        return;
-      }
-
-      if (selectedProject) {
-        // Modal navigation
-        if (key === 'arrowright' || key === 'd') navigateModal('next');
-        if (key === 'arrowleft' || key === 'a') navigateModal('prev');
-        return;
-      }
-
-      // Slider navigation
-      if (key === 'arrowright' || key === 'd') {
-        if (projectGroups.length > 0) slideAction('next', projectGroups[0].title);
-      } else if (key === 'arrowleft' || key === 'a') {
-        if (projectGroups.length > 0) slideAction('prev', projectGroups[0].title);
-      } else if (key === 'arrowdown' || key === 's') {
-        const currentIndex = categories.indexOf(activeCategory);
-        if (currentIndex < categories.length - 1) setActiveCategory(categories[currentIndex + 1]);
-      } else if (key === 'arrowup' || key === 'w') {
-        const currentIndex = categories.indexOf(activeCategory);
-        if (currentIndex > 0) setActiveCategory(categories[currentIndex - 1]);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isActive, selectedProject, activeCategory, projectGroups, categories]);
-
-  // Auto-sliding 
-  useEffect(() => {
-    if (isActive && !selectedProject && projectGroups.length > 0) {
-      autoSlideInterval.current = setInterval(() => {
-        projectGroups.forEach(group => {
-          slideAction('next', group.title, true);
-        });
-      }, 3000);
-    } else {
-      clearInterval(autoSlideInterval.current);
-    }
-    return () => clearInterval(autoSlideInterval.current);
-  }, [isActive, selectedProject, projectGroups]);
-
-  const slideAction = (dir, catTitle, isAuto = false) => {
-    const container = scrollRef.current[catTitle];
-    if (container) {
-      const scrollWidth = container.scrollWidth;
-      const clientWidth = container.clientWidth;
-      const currentScroll = container.scrollLeft;
-      const scrollAmount = dir === 'next' ? 400 : -400;
-
-      if (isAuto && dir === 'next' && currentScroll + clientWidth >= scrollWidth - 10) {
-        container.scrollTo({ left: 0, behavior: 'smooth' });
-        return;
-      }
-      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
+    const offset = Math.round(container.clientWidth * 0.85);
+    const target = dir === 'next' ? container.scrollLeft + offset : container.scrollLeft - offset;
+    container.scrollTo({ left: target, behavior: 'smooth' });
   };
 
-  const navigateModal = (direction) => {
-    if (!selectedProject) return;
-    const currentIndex = allProjects.findIndex(p => p.title === selectedProject.title);
-    let nextIndex;
-    if (direction === 'next') {
-      nextIndex = (currentIndex + 1) % allProjects.length;
-    } else {
-      nextIndex = (currentIndex - 1 + allProjects.length) % allProjects.length;
-    }
-    setSelectedProject(allProjects[nextIndex]);
+  const handleCardOpen = (project) => {
+    setSelectedProject(project);
   };
 
   useEffect(() => {
@@ -149,8 +71,20 @@ const Projects = ({ isActive, onClose }) => {
     } else {
       document.body.style.overflow = '';
     }
-    return () => { document.body.style.overflow = ''; };
+
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [selectedProject]);
+
+  const navigateModal = (direction) => {
+    if (!selectedProject || allProjects.length === 0) return;
+    const currentIndex = allProjects.findIndex((project) => project._id === selectedProject._id || project.title === selectedProject.title);
+    const nextIndex = direction === 'next'
+      ? (currentIndex + 1) % allProjects.length
+      : (currentIndex - 1 + allProjects.length) % allProjects.length;
+    setSelectedProject(allProjects[nextIndex]);
+  };
 
   return (
     <section id="projects" className={`section-overlay project-cinematic-section ${isActive ? 'active' : ''}`}>
@@ -160,75 +94,97 @@ const Projects = ({ isActive, onClose }) => {
         <i className="fas fa-times"></i>
       </button>
 
-      <div className="container" style={{ marginTop: '120px', paddingBottom: '5rem' }}>
-        <div className="section-header" style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h2 style={{ fontSize: '3rem', textTransform: 'uppercase', letterSpacing: '4px' }}>
-            PROJECT <span style={{ color: 'var(--primary-color)' }}>PORTFOLIO</span>
-          </h2>
-          <div className="project-category-tabs">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                className={`category-tab ${activeCategory === cat ? 'active' : ''}`}
-                onClick={() => setActiveCategory(cat)}
-              >
-                {cat}
-              </button>
-            ))}
+      <div className="projects-shell">
+        <div className="projects-intro">
+          <div>
+            <span className="projects-label">Project Showcase</span>
+            <h2 className="projects-heading">Interactive Portfolio Projects</h2>
+            <p className="projects-description">
+              Browse the complete project portfolio with strong visibility, clear metadata, and easy navigation.
+            </p>
+          </div>
+
+          <div className="projects-stats">
+            <div className="stat-card">
+              <strong>{allProjects.length}</strong>
+              <span>Total Projects</span>
+            </div>
+            <div className="stat-card">
+              <strong>{featuredCount}</strong>
+              <span>Featured</span>
+            </div>
+            <div className="stat-card">
+              <strong>{liveCount}</strong>
+              <span>Live Demos</span>
+            </div>
           </div>
         </div>
 
-        {projectGroups.map((group, gIdx) => (
-          <div
-            key={gIdx}
-            className="project-category-row"
-            style={{ marginBottom: '4rem' }}
-          >
-            <div className="category-header">
-              <div className="category-info">
-                <h3 className="category-title">{group.title}</h3>
-              </div>
-            </div>
+        {error && <div className="projects-alert">{error}</div>}
 
-            <div
-              className="projects-rolling-container"
-              ref={el => scrollRef.current[group.title] = el}
+        <div className="project-category-tabs">
+          {categories.map((category) => (
+            <button
+              key={category}
+              className={`category-tab ${activeCategory === category ? 'active' : ''}`}
+              onClick={() => setActiveCategory(category)}
             >
-              {group.projects.map((project, pIdx) => (
-                <div
-                  key={pIdx}
-                  className="project-slide-card"
-                  onClick={() => setSelectedProject(project)}
-                >
-                  <div className="project-card-inner">
+              {category}
+            </button>
+          ))}
+        </div>
+
+        <div className="project-scroller-wrap">
+          <button className="project-scroll-btn prev" onClick={() => scrollAction('prev', activeCategory)}>
+            <i className="fas fa-chevron-left"></i>
+          </button>
+
+          <div
+            className="projects-rolling-container"
+            ref={(el) => { if (el) scrollRef.current[activeCategory] = el; }}
+          >
+            {loading ? (
+              <div className="project-loading">Loading projects...</div>
+            ) : filteredProjects.length === 0 ? (
+              <div className="project-empty">No projects found for this category.</div>
+            ) : (
+              filteredProjects.map((project, index) => (
+                <div key={project._id || project.title || index} className="project-slide-card">
+                  <div className="project-card-inner" onClick={() => handleCardOpen(project)}>
                     <div className="project-image-wrap">
-                      <img src={getFileUrl(project.image)} alt={project.title} onError={(e) => { e.target.style.display='none'; e.target.nextElementSibling && (e.target.nextElementSibling.style.display='flex'); }} />
-                      <div className="project-type-tag">{project.meta?.split('|')[1]?.trim() || "PROJECT"}</div>
+                      {project.image ? (
+                        <img src={getFileUrl(project.image)} alt={project.title} />
+                      ) : (
+                        <div className="project-image-empty">No preview</div>
+                      )}
+                      <div className="project-type-tag">{project.category || 'Project'}</div>
                     </div>
+
                     <div className="project-info-minimal">
-                      <h4>{project.title}</h4>
-                      <p>{project.desc?.substring(0, 60)}...</p>
+                      <div className="project-title-row">
+                        <h4>{project.title}</h4>
+                        {project.priority && <span className="project-featured-pill">Featured</span>}
+                      </div>
+                      <p>{project.desc?.slice(0, 120) || 'A concise project summary is not available.'}</p>
                       <div className="project-card-footer">
-                        <span>EXPLORE</span>
+                        <span>Explore Project</span>
                         <i className="fas fa-arrow-right"></i>
                       </div>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              ))
+            )}
           </div>
-        ))}
 
-        {projectGroups.length === 0 && (
-          <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.5)', marginTop: '5rem' }}>
-            <p>No projects found in this category.</p>
-          </div>
-        )}
+          <button className="project-scroll-btn next" onClick={() => scrollAction('next', activeCategory)}>
+            <i className="fas fa-chevron-right"></i>
+          </button>
+        </div>
       </div>
 
       {selectedProject && (
-        <div className="modal-overlay active" style={{ zIndex: 5000 }} onClick={(e) => e.target === e.currentTarget && setSelectedProject(null)}>
+        <div className="modal-overlay active" onClick={(e) => e.target === e.currentTarget && setSelectedProject(null)}>
           <button className="modal-nav modal-prev" onClick={(e) => { e.stopPropagation(); navigateModal('prev'); }}>
             <i className="fas fa-chevron-left"></i>
           </button>
@@ -241,26 +197,62 @@ const Projects = ({ isActive, onClose }) => {
             <div className="modal-body">
               <div className="modal-left">
                 <div className="modal-image-container">
-                  <img src={getFileUrl(selectedProject.image)} alt={selectedProject.title} className="modal-image" />
+                  {selectedProject.videoUrl ? (
+                    <video
+                      src={getFileUrl(selectedProject.videoUrl)}
+                      controls
+                      className="modal-video"
+                      poster={getFileUrl(selectedProject.image)}
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  ) : selectedProject.image ? (
+                    <img src={getFileUrl(selectedProject.image)} alt={selectedProject.title} className="modal-image" />
+                  ) : (
+                    <div className="modal-image-empty">No preview available</div>
+                  )}
                 </div>
               </div>
+
               <div className="modal-right">
-                <div className="modal-category-badge">{selectedProject.category}</div>
+                <div className="modal-category-badge">{selectedProject.category || 'Project'}</div>
                 <h2 className="modal-title">{selectedProject.title}</h2>
+                <div className="modal-detail-row">
+                  <span className="project-detail-label">Category</span>
+                  <span>{selectedProject.category || 'General'}</span>
+                </div>
+                {selectedProject.priority && <div className="project-priority-label">Priority Project</div>}
+
                 <div className="modal-tech-stack">
-                  {selectedProject.meta?.split('|').map((t, i) => (
-                    <span key={i} className="tech-pill">{t.trim()}</span>
+                  {selectedProject.meta?.split('|').map((tag, idx) => (
+                    <span key={idx} className="tech-pill">{tag.trim()}</span>
                   ))}
                 </div>
+
                 <div className="modal-divider"></div>
-                <p className="modal-description">{selectedProject.desc}</p>
+                <p className="modal-description">{selectedProject.desc || 'No detailed description available.'}</p>
+
                 <div className="modal-actions">
-                  <a href={selectedProject.link === '#' ? 'javascript:void(0)' : selectedProject.link} target="_blank" rel="noopener noreferrer" className="btn-modal-primary">
-                    <i className="fas fa-external-link-alt"></i> LIVE DEMO
-                  </a>
-                  <a href="#" className="btn-modal-secondary">
-                    <i className="fab fa-github"></i> SOURCE
-                  </a>
+                  {selectedProject.link && selectedProject.link !== '#' && (
+                    <a href={selectedProject.link} target="_blank" rel="noopener noreferrer" className="btn-modal-primary">
+                      <i className="fas fa-external-link-alt"></i> Live Demo
+                    </a>
+                  )}
+                  {selectedProject.githubLink && selectedProject.githubLink !== '#' && (
+                    <a href={selectedProject.githubLink} target="_blank" rel="noopener noreferrer" className="btn-modal-secondary">
+                      <i className="fab fa-github"></i> Source Code
+                    </a>
+                  )}
+                  {selectedProject.videoUrl && (
+                    <a href={getFileUrl(selectedProject.videoUrl)} target="_blank" rel="noopener noreferrer" className="btn-modal-secondary">
+                      <i className="fas fa-play"></i> Watch Video
+                    </a>
+                  )}
+                  {!selectedProject.link && !selectedProject.githubLink && !selectedProject.videoUrl && (
+                    <span className="btn-modal-disabled">
+                      <i className="fas fa-code"></i> Private Project
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

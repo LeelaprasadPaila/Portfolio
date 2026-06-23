@@ -10,10 +10,16 @@ const certificateSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Category is required'],
     },
-    description: String,
+    description: {
+      type: String,
+      default: '',
+    },
     image: String,
     issuer: String,
     issueDate: String,
+    expiryDate: String,
+    key: String, // License key or certification number for licensed certificates
+    certLink: String, // Link to view the certificate online
     priority: {
       type: Boolean,
       default: false,

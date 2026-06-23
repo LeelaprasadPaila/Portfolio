@@ -4,7 +4,7 @@ import path from 'path';
 
 export const getInternships = async (req, res) => {
   try {
-    const internships = await Internship.find().sort({ priority: -1, createdAt: -1 });
+    const internships = await Internship.find().lean().sort({ priority: -1, createdAt: -1 });
     res.json(internships);
   } catch (error) {
     res.status(500).json({ message: error.message, error: true });

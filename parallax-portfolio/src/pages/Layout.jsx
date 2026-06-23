@@ -9,11 +9,14 @@ const Layout = () => {
     const navigate = useNavigate();
 
     // Derive activeSection from the URL path
-    const activeSection = (location.pathname === '/' ? 'home' : location.pathname.substring(1)).toLowerCase();
+    const routePath = (location.pathname === '/' ? 'home' : location.pathname.substring(1)).toLowerCase();
+    const activeSection = routePath === 'internships' ? 'experience' : routePath;
 
     const openSection = (targetId) => {
         if (targetId === 'home') {
             navigate('/');
+        } else if (targetId === 'experience') {
+            navigate('/experience');
         } else {
             navigate(`/${targetId}`);
         }
@@ -38,9 +41,7 @@ const Layout = () => {
 
     return (
         <div className="ml-theme">
-            {activeSection !== 'admin' && (
-                <Navbar activeSection={activeSection} onNavClick={openSection} />
-            )}
+            <Navbar activeSection={activeSection} onNavClick={openSection} />
 
             <Outlet />
 

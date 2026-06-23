@@ -51,7 +51,7 @@ async function run() {
     console.log('Admin credentials:');
     console.log('  username:', username);
     console.log('  password: (from .env)');
-    console.log('\nYou can now login at: http://localhost:5173/admin');
+    console.log('\nYou can now login at: http://localhost:5174/admin');
     process.exit(0);
   } catch (err) {
     console.error('✗', err.message);

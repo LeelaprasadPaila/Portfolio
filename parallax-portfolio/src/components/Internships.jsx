@@ -40,8 +40,8 @@ const Internships = ({ isActive, onClose }) => {
             return item.type === filter;
         })
         .sort((a, b) => {
-            // Sort: Internship > Experience
-            const order = { 'Internship': 1, 'Experience': 2 };
+            // Sort: Experience > Internship (Experience shown prominently)
+            const order = { 'Experience': 1, 'Internship': 2 };
             const typeA = order[a.type] || 99;
             const typeB = order[b.type] || 99;
             if (typeA !== typeB) return typeA - typeB;
@@ -90,7 +90,7 @@ const Internships = ({ isActive, onClose }) => {
                             filteredExp.map((item, idx) => (
                                 <div
                                     key={idx}
-                                    className={`timeline-item ${isActive ? 'active' : ''}`}
+                                    className={`timeline-item ${isActive ? 'active' : ''} ${item.type === 'Experience' ? 'experience-highlight' : ''}`}
                                     style={{ transitionDelay: `${idx * 0.1}s` }}
                                 >
                                     <div className="timeline-dot"></div>

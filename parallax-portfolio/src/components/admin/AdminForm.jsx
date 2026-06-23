@@ -10,9 +10,15 @@ const AdminForm = ({
   isLoading,
   onCancel,
   submitText = 'Submit',
+  onFieldChange,
 }) => {
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
+
+    // Allow custom field change handler if provided
+    if (onFieldChange && onFieldChange(name, value, type, checked, files)) {
+      return;
+    }
 
     if (type === 'checkbox') {
       setFormData((prev) => ({ ...prev, [name]: checked }));

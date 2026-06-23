@@ -4,7 +4,22 @@ import path from 'path';
 
 export const getCertificates = async (req, res) => {
   try {
-    const certificates = await Certificate.find().sort({ priority: -1, createdAt: -1 });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 0;
+    const skip = limit > 0 ? (page - 1) * limit : 0;
+
+    const query = Certificate.find().lean().sort({ priority: -1, createdAt: -1 });
+    if (limit > 0) {
+      query.skip(skip).limit(limit);
+    }
+
+    const certificates = await query;
+
+    if (limit > 0) {
+      const total = await Certificate.countDocuments();
+      return res.json({ certificates, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
+    }
+
     res.json(certificates);
   } catch (error) {
     res.status(500).json({ message: error.message, error: true });
@@ -13,7 +28,7 @@ export const getCertificates = async (req, res) => {
 
 export const createCertificate = async (req, res) => {
   try {
-    const { title, category, description, issuer, issueDate, priority } = req.body;
+    const { title, category, description, issuer, issueDate, expiryDate, certLink, priority, key } = req.body;
 
     if (!title || !category) {
       return res.status(400).json({ message: 'Title and category are required', error: true });
@@ -25,7 +40,10 @@ export const createCertificate = async (req, res) => {
       description,
       issuer,
       issueDate,
+      expiryDate,
+      certLink,
       priority: priority === 'true' || priority === true,
+      key,
     };
 
     if (req.file) {
@@ -48,14 +66,17 @@ export const updateCertificate = async (req, res) => {
       return res.status(404).json({ message: 'Certificate not found', error: true });
     }
 
-    const { title, category, description, issuer, issueDate, priority } = req.body;
+    const { title, category, description, issuer, issueDate, expiryDate, certLink, priority, key } = req.body;
 
     certificate.title = title || certificate.title;
     certificate.category = category || certificate.category;
     certificate.description = description || certificate.description;
     certificate.issuer = issuer || certificate.issuer;
     certificate.issueDate = issueDate || certificate.issueDate;
+    certificate.expiryDate = expiryDate || certificate.expiryDate;
+    certificate.certLink = certLink || certificate.certLink;
     certificate.priority = priority !== undefined ? (priority === 'true' || priority === true) : certificate.priority;
+    certificate.key = key !== undefined ? key : certificate.key;
 
     if (req.file) {
       if (certificate.image) {

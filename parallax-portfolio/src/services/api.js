@@ -1,13 +1,32 @@
+/**
+ * Specialized Portfolio API Layer
+ * Centralized interface for backend communication with dynamic caching and environment awareness.
+ */
+
+import ENV from '../config/env';
 import { STORAGE_KEYS } from '../data/dataStore';
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+const API_URL = ENV.API_URL;
+const CACHE_ENABLED = !ENV.IS_DEV;
+const cache = new Map();
 
 // Token management
 export const getAuthToken = () => localStorage.getItem('portfolio_auth_token');
 export const setAuthToken = (token) => localStorage.setItem('portfolio_auth_token', token);
 export const clearAuthToken = () => localStorage.removeItem('portfolio_auth_token');
 
-// Base API call
+/**
+ * Unified API Caller
+ * handles headers, auth tokens, caching and response parsing.
+ */
 const apiCall = async (endpoint, options = {}) => {
+  const isGet = !options.method || options.method.toUpperCase() === 'GET';
+  
+  // Return cached data if available (simple cache-first strategy)
+  if (isGet && CACHE_ENABLED && cache.has(endpoint)) {
+    return cache.get(endpoint);
+  }
+
   const token = getAuthToken();
   const headers = {
     'Content-Type': options.headers?.['Content-Type'] || 'application/json',
@@ -23,19 +42,30 @@ const apiCall = async (endpoint, options = {}) => {
     delete headers['Content-Type'];
   }
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      ...options,
+      headers,
+    });
 
-  const data = await response.json();
+    const data = await response.json();
 
-  if (!response.ok) {
-    throw new Error(data.message || `API error: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(data.message || `Portfolio-API Exception: ${response.status}`);
+    }
+
+    // Cache successful GET results
+    if (isGet && CACHE_ENABLED) {
+      cache.set(endpoint, data);
+    }
+
+    return data;
+  } catch (error) {
+    console.error(`[API-ERROR] ${endpoint}:`, error.message);
+    throw error;
   }
-
-  return data;
 };
+
 
 // File URL helper
 export const getFileUrl = (path) => {
@@ -44,9 +74,9 @@ export const getFileUrl = (path) => {
   if (path.startsWith('http') || path.startsWith('data:')) return path;
   // Static assets in public folder (e.g., images/...)
   if (path.startsWith('images/')) return `/${path}`;
+  
   // Uploaded files served from backend uploads directory
-  const baseUrl = API_URL.replace('/api', '');
-  return `${baseUrl}/uploads/${path.split('/').pop()}`;
+  return `${ENV.STORAGE_URL}/${path.split('/').pop()}`;
 };
 
 // Auth API
@@ -58,6 +88,26 @@ export const loginAdmin = (username, password) =>
 
 export const verifyAuth = () => apiCall('/auth/verify');
 
+// Contact API
+export const submitContactForm = (payload) =>
+  apiCall('/contact', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
+export const getContacts = () => apiCall('/contact');
+
+export const updateContactStatus = (id, data) =>
+  apiCall(`/contact/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+
+export const deleteContact = (id) =>
+  apiCall(`/contact/${id}`, {
+    method: 'DELETE',
+  });
+
 // Bio API
 export const getBio = () => apiCall('/bio');
 export const updateBio = (bioData) =>
@@ -66,14 +116,24 @@ export const updateBio = (bioData) =>
     body: JSON.stringify(bioData),
   });
 
+const normalizeListResponse = (data) => {
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.projects)) return data.projects;
+  if (data && Array.isArray(data.internships)) return data.internships;
+  if (data && Array.isArray(data.certificates)) return data.certificates;
+  if (data && Array.isArray(data.skills)) return data.skills;
+  return [];
+};
+
 // Projects API
-export const getProjects = () => apiCall('/projects');
+export const getProjects = async () => normalizeListResponse(await apiCall('/projects'));
 
 export const createProject = (formData) =>
   apiCall('/projects', {
     method: 'POST',
     body: formData,
   });
+
 
 export const updateProject = (id, formData) =>
   apiCall(`/projects/${id}`, {
@@ -86,28 +146,8 @@ export const deleteProject = (id) =>
     method: 'DELETE',
   });
 
-// Certificates API
-export const getCertificates = () => apiCall('/certificates');
-
-export const createCertificate = (formData) =>
-  apiCall('/certificates', {
-    method: 'POST',
-    body: formData,
-  });
-
-export const updateCertificate = (id, formData) =>
-  apiCall(`/certificates/${id}`, {
-    method: 'PUT',
-    body: formData,
-  });
-
-export const deleteCertificate = (id) =>
-  apiCall(`/certificates/${id}`, {
-    method: 'DELETE',
-  });
-
 // Internships API
-export const getInternships = () => apiCall('/internships');
+export const getInternships = async () => normalizeListResponse(await apiCall('/internships'));
 
 export const createInternship = (formData) =>
   apiCall('/internships', {
@@ -127,18 +167,19 @@ export const deleteInternship = (id) =>
   });
 
 // Skills API
-export const getSkills = () => apiCall('/skills');
+export const getSkills = async () => normalizeListResponse(await apiCall('/skills'));
 
-export const createSkill = (skillData) =>
+
+export const createSkill = (formData) =>
   apiCall('/skills', {
     method: 'POST',
-    body: JSON.stringify(skillData),
+    body: formData,
   });
 
-export const updateSkill = (id, skillData) =>
+export const updateSkill = (id, formData) =>
   apiCall(`/skills/${id}`, {
     method: 'PUT',
-    body: JSON.stringify(skillData),
+    body: formData,
   });
 
 export const deleteSkill = (id) =>
@@ -146,31 +187,28 @@ export const deleteSkill = (id) =>
     method: 'DELETE',
   });
 
-// Contacts API
-export const submitContactForm = (contactData) =>
-  apiCall('/contacts/submit', {
+// Certificates API
+export const getCertificates = async () => normalizeListResponse(await apiCall('/certificates?limit=1000'));
+
+export const createCertificate = (formData) =>
+  apiCall('/certificates', {
     method: 'POST',
-    body: JSON.stringify(contactData),
+    body: formData,
   });
 
-export const getContacts = () => apiCall('/contacts');
-
-export const updateContactStatus = (id, statusData) =>
-  apiCall(`/contacts/${id}`, {
+export const updateCertificate = (id, formData) =>
+  apiCall(`/certificates/${id}`, {
     method: 'PUT',
-    body: JSON.stringify(statusData),
+    body: formData,
   });
 
-export const deleteContact = (id) =>
-  apiCall(`/contacts/${id}`, {
+export const deleteCertificate = (id) =>
+  apiCall(`/certificates/${id}`, {
     method: 'DELETE',
   });
 
-export default {
-  getAuthToken,
-  setAuthToken,
-  clearAuthToken,
-};
+// ... and other endpoints follow the same pattern
+
 // Generic sync helpers for the Admin panel
 export const createOne = async (key, item) => {
   const map = {
@@ -195,3 +233,9 @@ export const updateById = async (key, id, item) => {
 };
 
 export { STORAGE_KEYS };
+
+export default {
+  getAuthToken,
+  setAuthToken,
+  clearAuthToken,
+};

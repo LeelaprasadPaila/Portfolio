@@ -2,7 +2,7 @@ import Bio from '../models/Bio.js';
 
 export const getBio = async (req, res) => {
   try {
-    let bio = await Bio.findOne();
+    let bio = await Bio.findOne().lean();
     if (!bio) {
       bio = new Bio();
       await bio.save();

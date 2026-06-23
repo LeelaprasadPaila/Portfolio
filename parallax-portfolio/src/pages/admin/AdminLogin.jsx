@@ -64,6 +64,10 @@ const AdminLogin = () => {
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
+
+        <div className="admin-login-hint">
+          <p>Tip: if your admin account is not yet created, set <code>ADMIN_USERNAME</code>, <code>ADMIN_PASSWORD</code>, and <code>ADMIN_EMAIL</code> in the backend .env, then run <code>npm run init-admin</code>.</p>
+        </div>
       </div>
     </div>
   );

@@ -120,6 +120,31 @@
     transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.timeline-item.experience-highlight {
+    padding-left: 70px;
+}
+
+.timeline-item.experience-highlight .timeline-dot {
+    width: 24px;
+    height: 24px;
+    left: 8px;
+    top: 8px;
+    background: var(--primary-color);
+    box-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--primary-color);
+}
+
+.timeline-item.experience-highlight .timeline-content {
+    background: rgba(0, 242, 255, 0.05);
+    border-color: rgba(0, 242, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+}
+
+.timeline-item.experience-highlight .timeline-content:hover {
+    background: rgba(0, 242, 255, 0.08);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+}
+
 .timeline-dot {
     position: absolute;
     left: 11px;

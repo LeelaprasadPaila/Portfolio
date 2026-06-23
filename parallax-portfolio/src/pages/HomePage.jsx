@@ -5,12 +5,14 @@ import Hero from '../components/Hero';
 const HomePage = () => {
     const navigate = useNavigate();
 
-    const handleExploreClick = () => {
-        navigate('/projects');
+    const handleActionClick = (target) => {
+        if (target === 'home') navigate('/');
+        else if (target === 'experience') navigate('/experience');
+        else navigate(`/${target}`);
     };
 
     return (
-        <Hero onExploreClick={handleExploreClick} />
+        <Hero onExploreClick={handleActionClick} />
     );
 };
 

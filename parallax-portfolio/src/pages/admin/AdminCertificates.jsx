@@ -18,6 +18,7 @@ const AdminCertificates = () => {
     description: '',
     issuer: '',
     issueDate: '',
+    key: '',
     priority: false,
     image: null,
   });
@@ -49,6 +50,7 @@ const AdminCertificates = () => {
       formDataObj.append('description', formData.description);
       formDataObj.append('issuer', formData.issuer);
       formDataObj.append('issueDate', formData.issueDate);
+      formDataObj.append('key', formData.key);
       formDataObj.append('priority', formData.priority);
 
       if (formData.image instanceof File) {
@@ -87,17 +89,37 @@ const AdminCertificates = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const resetForm = () => {
-    setFormData({
-      title: '',
-      category: '',
-      description: '',
-      issuer: '',
-      issueDate: '',
-      priority: false,
-      image: null,
-    });
-    setEditingId(null);
+  const handleFieldChange = (name, value, type, checked, files) => {
+    if (name === 'category') {
+      handleCategoryChange(value);
+      return true; // Prevent default handling
+    }
+    return false; // Allow default handling
+  };
+
+  const getFields = () => {
+    const baseFields = [
+      { name: 'title', label: 'Title', type: 'text', required: true },
+      { name: 'category', label: 'Category', type: 'text', required: true },
+      { name: 'description', label: 'Description', type: 'textarea' },
+      { name: 'issuer', label: 'Issuer', type: 'text' },
+      { name: 'issueDate', label: 'Issue Date', type: 'date' },
+      { name: 'image', label: 'Image', type: 'file', accept: 'image/*' },
+      { name: 'priority', label: 'Priority', type: 'checkbox' },
+    ];
+
+    // Add license key field only for licensed certificates
+    if (formData.category === 'licensed') {
+      baseFields.splice(5, 0, {
+        name: 'key',
+        label: 'License Key/Certification Number',
+        type: 'text',
+        placeholder: 'Enter license key or certification number',
+        required: true
+      });
+    }
+
+    return baseFields;
   };
 
   return (
@@ -106,21 +128,14 @@ const AdminCertificates = () => {
       
       <AdminForm
         title="Certificate Form"
-        fields={[
-          { name: 'title', label: 'Title', type: 'text', required: true },
-          { name: 'category', label: 'Category', type: 'text', required: true },
-          { name: 'description', label: 'Description', type: 'textarea' },
-          { name: 'issuer', label: 'Issuer', type: 'text' },
-          { name: 'issueDate', label: 'Issue Date', type: 'date' },
-          { name: 'image', label: 'Image', type: 'file', accept: 'image/*' },
-          { name: 'priority', label: 'Priority', type: 'checkbox' },
-        ]}
+        fields={getFields()}
         formData={formData}
         setFormData={setFormData}
         onSubmit={handleSubmit}
         isLoading={loading}
         onCancel={editingId ? resetForm : null}
         submitText={editingId ? 'Update' : 'Add'}
+        onFieldChange={handleFieldChange}
       />
 
       <h2>Certificates List ({certificates.length})</h2>

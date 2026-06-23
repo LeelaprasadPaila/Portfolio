@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { getCertificates, getFileUrl } from '../services/api';
+import { certificatesData } from '../data/certificatesData';
 import NeuralBackground from './NeuralBackground';
 import gsap from 'gsap';
 import '../styles/Certificates.css';
@@ -34,7 +35,8 @@ const Certificates = ({ isActive, onClose }) => {
             }
         } catch (err) {
             console.warn('Certificates API load failed, falling back to local data.', err);
-            setError('Unable to fetch updated certificates. Showing local data.');
+            setError('Showing verified credentials and technical certifications.');
+            // Combine API and local data if needed, but here we just fallback
             setAllCerts(sortCerts(certificatesData));
         } finally {
             setLoading(false);
@@ -48,14 +50,25 @@ const Certificates = ({ isActive, onClose }) => {
     }, [isActive, loadCertificates]);
 
     const categories = useMemo(() => {
-        const certCats = allCerts.map(c => c.category).filter(Boolean);
-        return ["All", ...new Set(certCats)];
+        // We want specific order: All, Licensed, Normal, then others
+        const types = ["Licensed", "Normal"];
+        const certCats = allCerts
+            .map(c => c.category)
+            .filter(c => c && c !== "Licensed" && c !== "Normal");
+        return ["All", ...types, ...new Set(certCats)];
     }, [allCerts]);
 
     const filteredCerts = useMemo(() => {
-        const filtered = activeCategory === "All" 
-            ? allCerts 
-            : allCerts.filter(c => c.category === activeCategory);
+        let filtered = allCerts;
+        
+        if (activeCategory === "Licensed") {
+            filtered = allCerts.filter(c => c.category?.toLowerCase() === "licensed");
+        } else if (activeCategory === "Normal") {
+            filtered = allCerts.filter(c => c.category?.toLowerCase() === "normal");
+        } else if (activeCategory !== "All") {
+            filtered = allCerts.filter(c => c.category === activeCategory);
+        }
+        
         return sortCerts(filtered);
     }, [allCerts, activeCategory, sortCerts]);
 
@@ -65,7 +78,7 @@ const Certificates = ({ isActive, onClose }) => {
 
     // Auto-advance slider when active
     useEffect(() => {
-        if (filteredCerts.length === 0) return;
+        if (filteredCerts.length <= 1) return;
 
         if (isActive) {
             const timer = setTimeout(() => {
@@ -80,8 +93,8 @@ const Certificates = ({ isActive, onClose }) => {
         if (isActive && containerRef.current) {
             gsap.fromTo(
                 containerRef.current,
-                { opacity: 0 },
-                { opacity: 1, duration: 0.8, ease: 'power2.out' }
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 1, ease: 'power4.out' }
             );
         }
     }, [isActive]);
@@ -94,14 +107,14 @@ const Certificates = ({ isActive, onClose }) => {
         setCurrentIndex((prev) => (prev + 1) % filteredCerts.length);
     };
 
-    if (allCerts.length === 0) {
+    if (allCerts.length === 0 && loading) {
         return (
             <section className="cert-section" ref={containerRef}>
                 <div className="cert-header">
                     <h2 className="section-title">Certifications</h2>
                     <p className="section-subtitle">Professional Achievements & Credentials</p>
                 </div>
-                <div className="cert-empty">Loading certificates...</div>
+                <div className="cert-empty">Initializing secure credentials...</div>
             </section>
         );
     }
@@ -114,10 +127,23 @@ const Certificates = ({ isActive, onClose }) => {
             
             {/* Header */}
             <div className="cert-header">
-                <div>
+                <div className="header-info">
                     <h2 className="section-title">Certifications</h2>
-                    <p className="section-subtitle">Professional Achievements & Credentials</p>
-                    {error && <p className="cert-error">{error}</p>}
+                    <p className="section-subtitle">Verified Professional Achievements</p>
+                    {error && <p className="cert-status-msg">{error}</p>}
+                </div>
+            </div>
+
+            {/* Sub-Header / Info */}
+            <div className="cert-stats-overview">
+                <div className="stat-item">
+                    <span className="stat-value">{allCerts.filter(c => c.category?.toLowerCase() === 'licensed').length}</span>
+                    <span className="stat-label">Licensed Credentials</span>
+                </div>
+                <div className="stat-divider"></div>
+                <div className="stat-item">
+                    <span className="stat-value">{allCerts.filter(c => c.category?.toLowerCase() === 'normal').length}</span>
+                    <span className="stat-label">Course Certificates</span>
                 </div>
             </div>
 
@@ -126,12 +152,15 @@ const Certificates = ({ isActive, onClose }) => {
                 {categories.map((cat) => (
                     <button
                         key={cat}
-                        className={`cert-tab ${activeCategory === cat ? 'active' : ''}`}
+                        className={`cert-tab ${activeCategory === cat ? 'active' : ''} ${cat === 'Licensed' ? 'licensed-pill' : ''}`}
                         onClick={() => setActiveCategory(cat)}
                     >
                         {cat}
                         <span className="tab-count">
-                            {cat === "All" ? allCerts.length : allCerts.filter(c => c.category === cat).length}
+                            {cat === "All" ? allCerts.length : 
+                             cat === "Licensed" ? allCerts.filter(c => c.category?.toLowerCase() === "licensed").length :
+                             cat === "Normal" ? allCerts.filter(c => c.category?.toLowerCase() === "normal").length :
+                             allCerts.filter(c => c.category === cat).length}
                         </span>
                     </button>
                 ))}
@@ -140,7 +169,7 @@ const Certificates = ({ isActive, onClose }) => {
             {/* Main Showcase */}
             {currentCert && (
                 <div className="cert-showcase-wrapper">
-                    <div className="cert-showcase">
+                    <div className={`cert-showcase ${currentCert.category?.toLowerCase() === 'licensed' ? 'is-licensed' : ''}`}>
                         {/* Certificate Image */}
                         <div className="cert-image-container">
                             {currentCert.image ? (
@@ -156,98 +185,122 @@ const Certificates = ({ isActive, onClose }) => {
                             ) : null}
                             <div className="cert-image-fallback" style={{ display: currentCert.image ? 'none' : 'flex' }}>
                                 <i className="fas fa-certificate"></i>
-                                <span>Certificate</span>
+                                <span>Certificate View</span>
                             </div>
+                            
+                            {currentCert.category?.toLowerCase() === 'licensed' && (
+                                <div className="licensed-ribbon">
+                                    <i className="fas fa-crown"></i> Licensed Professional
+                                </div>
+                            )}
                         </div>
 
                         {/* Certificate Content */}
                         <div className="cert-content">
                             <div className="cert-meta-badges">
-                                <span className="badge badge-category">{currentCert.category}</span>
-                                <span className="badge badge-year">{currentCert.date}</span>
+                                <span className={`badge badge-category ${currentCert.category?.toLowerCase() === 'licensed' ? 'licensed' : ''}`}>
+                                    {currentCert.category}
+                                </span>
+                                {currentCert.issueDate && <span className="badge badge-date">Issued: {currentCert.issueDate}</span>}
+                                {currentCert.expiryDate && <span className="badge badge-expiry">Expires: {currentCert.expiryDate}</span>}
+                                {currentCert.priority && <span className="badge badge-priority">PRIME</span>}
                             </div>
 
                             <h3 className="cert-title-main">{currentCert.title}</h3>
-                            <p className="cert-issuer">
-                                <i className="fas fa-building"></i>
-                                <strong>{currentCert.provider}</strong>
-                            </p>
-                            <p className="cert-desc">{currentCert.details}</p>
 
-                            {currentCert.verifyUrl && currentCert.verifyUrl !== '#' && (
-                                <a
-                                    className="cert-action-btn"
-                                    href={currentCert.verifyUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    View Certificate
-                                </a>
+                            {currentCert.description && (
+                                <p className="cert-description-line">{currentCert.description}</p>
                             )}
 
-                            {/* Navigation and Counter */}
-                            <div className="cert-nav-bar">
-                                <div className="cert-counter">
-                                    <span className="counter-text">
-                                        {currentIndex + 1} / {filteredCerts.length}
+                            <div className="cert-issuer-box">
+                                <span className="issuer-icon">
+                                    <i className="fas fa-university"></i>
+                                </span>
+                                <div className="issuer-details">
+                                    <span className="label">Issued By</span>
+                                    <strong className="provider-name">{currentCert.issuer}</strong>
+                                </div>
+                            </div>
+
+                            {currentCert.category?.toLowerCase() === 'licensed' && currentCert.key && (
+                                <div className="cert-key-box">
+                                    <span className="key-icon">
+                                        <i className="fas fa-key"></i>
                                     </span>
+                                    <div className="key-details">
+                                        <span className="label">License Key</span>
+                                        <strong className="license-key">{currentCert.key}</strong>
+                                    </div>
                                 </div>
-                                <div className="nav-buttons">
-                                    <button className="nav-btn-control prev" onClick={(e) => { e.stopPropagation(); handlePrev(); }} aria-label="Previous">
-                                        <i className="fas fa-chevron-left"></i>
-                                    </button>
-                                    <button className="nav-btn-control next" onClick={(e) => { e.stopPropagation(); handleNext(); }} aria-label="Next">
-                                        <i className="fas fa-chevron-right"></i>
-                                    </button>
+                            )}
+
+                            <div className="cert-footer-actions">
+                                {currentCert.certLink && currentCert.certLink !== '#' && (
+                                    <a
+                                        className="cert-view-btn"
+                                        href={currentCert.certLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <i className="fas fa-external-link-alt"></i> View Certificate
+                                    </a>
+                                )}
+
+                                <div className="cert-page-info">
+                                    <span className="current">{currentIndex + 1}</span>
+                                    <span className="total">/ {filteredCerts.length}</span>
                                 </div>
+                            </div>
+
+                            {/* Navigation */}
+                            <div className="cert-slider-controls">
+                                <button className="ctrl-btn prev" onClick={(e) => { e.stopPropagation(); handlePrev(); }}>
+                                    <i className="fas fa-arrow-left"></i>
+                                </button>
+                                <button className="ctrl-btn next" onClick={(e) => { e.stopPropagation(); handleNext(); }}>
+                                    <i className="fas fa-arrow-right"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                    {/* Progress Bar */}
-                    <div className="cert-progress-container">
-                        <div className="progress-bar">
+                    {/* Multi-step progress dots */}
+                    <div className="cert-progress-dots">
+                        {filteredCerts.slice(0, 10).map((_, i) => (
                             <div 
-                                className="progress-fill" 
-                                style={{ width: `${filteredCerts.length > 0 ? ((currentIndex + 1) / filteredCerts.length) * 100 : 0}%` }}
+                                key={i} 
+                                className={`progress-dot ${i === currentIndex ? 'active' : ''}`}
+                                onClick={() => setCurrentIndex(i)}
                             ></div>
-                        </div>
+                        ))}
+                        {filteredCerts.length > 10 && <span className="more-dots">...</span>}
                     </div>
                 </div>
             )}
 
-            {/* Certificate Grid */}
-            <div className="cert-grid-container">
-                <h3 className="grid-heading">All Certifications</h3>
-                <div className="certificate-grid">
+            {/* Grid Preview */}
+            <div className="cert-grid-preview">
+                <div className="grid-header-wrap">
+                    <h3 className="grid-label">Credential Library</h3>
+                    <div className="label-line"></div>
+                </div>
+                <div className="cert-auto-grid">
                     {filteredCerts.map((cert, idx) => (
                         <div
                             key={cert._id || cert.id || idx}
-                            className={`cert-card-thumbnail ${idx === currentIndex ? 'active' : ''}`}
+                            className={`cert-mini-card ${idx === currentIndex ? 'active' : ''} ${cert.type === 'Licensed' ? 'licensed-card' : ''}`}
                             onClick={() => setCurrentIndex(idx)}
-                            role="button"
-                            tabIndex={0}
-                            onKeyPress={(e) => e.key === 'Enter' && setCurrentIndex(idx)}
                         >
-                            <div className="thumbnail-image-wrapper">
+                            <div className="mini-thumb">
                                 {cert.image ? (
-                                    <img 
-                                        src={getFileUrl(cert.image)} 
-                                        alt={cert.title}
-                                        className="thumbnail-image"
-                                        onError={(e) => {
-                                            e.target.style.display = 'none';
-                                            e.target.nextElementSibling.style.display = 'flex';
-                                        }}
-                                    />
-                                ) : null}
-                                <div className="thumbnail-fallback" style={{ display: cert.image ? 'none' : 'flex' }}>
+                                    <img src={getFileUrl(cert.image)} alt="" onError={(e) => e.target.style.display = 'none'} />
+                                ) : (
                                     <i className="fas fa-certificate"></i>
-                                </div>
+                                )}
                             </div>
-                            <div className="thumbnail-overlay">
-                                <h4 className="thumbnail-title">{cert.title}</h4>
-                                <p className="thumbnail-provider">{cert.provider}</p>
+                            <div className="mini-info">
+                                <span className="mini-title text-truncate">{cert.title}</span>
+                                <span className="mini-prov">{cert.provider}</span>
                             </div>
                         </div>
                     ))}

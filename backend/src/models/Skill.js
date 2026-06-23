@@ -13,4 +13,7 @@ const skillSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Index for faster queries
+skillSchema.index({ category: 1 });
+
 export default mongoose.model('Skill', skillSchema);

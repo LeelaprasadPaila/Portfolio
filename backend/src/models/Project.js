@@ -13,6 +13,8 @@ const projectSchema = new mongoose.Schema(
     desc: String,
     image: String,
     link: String,
+    githubLink: String,
+    videoUrl: String,
     meta: String,
     priority: {
       type: Boolean,

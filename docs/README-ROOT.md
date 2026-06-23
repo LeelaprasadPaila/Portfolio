@@ -17,7 +17,7 @@ Run both backend and frontend concurrently:
 cd parallax-portfolio
 node dev-start.js
 ```
-- **Frontend**: [http://localhost:5173](http://localhost:5173)
+- **Frontend**: [http://localhost:5174](http://localhost:5174)
 - **Backend API**: [http://localhost:5000](http://localhost:5000)
 
 ---
