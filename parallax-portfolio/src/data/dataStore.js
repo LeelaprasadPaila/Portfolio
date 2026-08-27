@@ -9,7 +9,9 @@ const STORAGE_KEYS = {
     STATS: 'portfolio_stats_data',
     TECH_SKILLS: 'portfolio_tech_skills_data',
     PROJECTS: 'portfolio_projects_data',
-    INTERNSHIPS: 'portfolio_internships_data'
+    INTERNSHIPS: 'portfolio_internships_data',
+    RESEARCH: 'portfolio_research_data',
+    GITHUB: 'portfolio_github_data'
 };
 
 const initialBio = {
@@ -21,7 +23,8 @@ const initialBio = {
     age: "21",
     degree: "B.tech CSE(AI & ML)",
     email: "pailaleelaprasad@gmail.com",
-    freelance: "Available"
+    freelance: "Available",
+    profileImage: "/images/Portfolio_image.png"
 };
 
 const initialProjects = [
@@ -32,7 +35,8 @@ const initialProjects = [
         image: "images/projects/project-1-thumb.png",
         link: "#",
         meta: "Python | ML",
-        priority: true
+        priority: true,
+        technologies: ["Python", "scikit-learn", "NumPy"]
     },
     {
         category: "Machine Learning & AI",
@@ -41,7 +45,8 @@ const initialProjects = [
         image: "images/projects/project-2-thumb.png",
         link: "#",
         meta: "PyTorch | CV",
-        priority: true
+        priority: true,
+        technologies: ["PyTorch", "OpenCV", "Python"]
     },
     {
         category: "Machine Learning & AI",
@@ -50,7 +55,8 @@ const initialProjects = [
         image: "images/projects/project-3-thumb.png",
         link: "#",
         meta: "TensorFlow | NLP",
-        priority: true
+        priority: true,
+        technologies: ["TensorFlow", "NLP", "Python"]
     },
     {
         category: "Machine Learning & AI",
@@ -59,7 +65,8 @@ const initialProjects = [
         image: "images/projects/project-1-thumb.png",
         link: "#",
         meta: "Keras | CNN",
-        priority: false
+        priority: false,
+        technologies: ["Keras", "CNN", "Python"]
     },
     {
         category: "Machine Learning & AI",
@@ -68,7 +75,8 @@ const initialProjects = [
         image: "images/projects/project-2-thumb.png",
         link: "#",
         meta: "Python | LSTM",
-        priority: false
+        priority: false,
+        technologies: ["Python", "LSTM", "Pandas"]
     },
     {
         category: "Machine Learning & AI",
@@ -77,7 +85,8 @@ const initialProjects = [
         image: "images/projects/project-3-thumb.png",
         link: "#",
         meta: "PyTorch | Segmentation",
-        priority: false
+        priority: false,
+        technologies: ["PyTorch", "Segmentation", "Python"]
     },
     {
         category: "Web Development & Automation",
@@ -86,7 +95,8 @@ const initialProjects = [
         image: "images/projects/project-3-thumb.png",
         link: "#",
         meta: "React | Node.js",
-        priority: true
+        priority: true,
+        technologies: ["React", "Node.js", "JavaScript"]
     },
     {
         category: "Web Development & Automation",
@@ -95,7 +105,8 @@ const initialProjects = [
         image: "images/projects/project-1-thumb.png",
         link: "#",
         meta: "Next.js | Three.js",
-        priority: true
+        priority: true,
+        technologies: ["Next.js", "Three.js", "React"]
     },
     {
         category: "Web Development & Automation",
@@ -104,7 +115,8 @@ const initialProjects = [
         image: "images/projects/project-2-thumb.png",
         link: "#",
         meta: "React | Socket.io",
-        priority: false
+        priority: false,
+        technologies: ["React", "Socket.io", "Node.js"]
     },
     {
         category: "Web Development & Automation",
@@ -113,7 +125,8 @@ const initialProjects = [
         image: "images/projects/project-3-thumb.png",
         link: "#",
         meta: "Docker | Terraform",
-        priority: false
+        priority: false,
+        technologies: ["Docker", "Terraform", "GitHub Actions"]
     },
     {
         category: "Data Science & Analytics",
@@ -122,7 +135,8 @@ const initialProjects = [
         image: "images/projects/project-1-thumb.png",
         link: "#",
         meta: "Pandas | Tableau",
-        priority: true
+        priority: true,
+        technologies: ["Pandas", "Tableau", "Python"]
     },
     {
         category: "Data Science & Analytics",
@@ -131,12 +145,275 @@ const initialProjects = [
         image: "images/projects/project-2-thumb.png",
         link: "#",
         meta: "Python | Scikit-learn",
-        priority: false
+        priority: false,
+        technologies: ["Python", "scikit-learn", "Pandas"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# NeuroDVT",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# OTP-BYPASS",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# work-report-generator",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Currency_conversion_in_Java",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Asset-Managment-System",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Online-Fee-Payment_System",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# FilePulse-Pro",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Data_Size_Unit_Converter_in_C",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Email-Generator-Pro",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Indian-Hackers",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# LeelaprasadPaila",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# General_store-website_2",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Portfolio",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Home-security",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# recipe-api",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# LeelaPrasad_Portfolio",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# 20KT1A4238--PAILA-LEELA-PRASAD",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# CGV",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Portfolio-Website-Oasis",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Task3-OASIS-",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# House_Price_Prediction",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Wine_Quality_Prediction",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Iris_Flowers_Classification",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Adventure_World_Website-Angular",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# hotel-booking-system",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false,
+        technologies: ["Pending"]
     }
 ];
 
 // Internships & Experiments data structure
 const initialInternships = [
+    {
+        type: "Experience",
+        company: "A2Z Company",
+        role: "AI/ML Engineer",
+        duration: "2024 - Present",
+        desc: "Working across AI-driven product development, scalable backend systems, and intelligent workflow automation for real-world business impact.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        priority: true,
+        technologies: ["Python", "FastAPI", "React", "LLMs", "MLOps"],
+        achievements: ["Delivered AI-enabled product workflows", "Built scalable backend services", "Improved automation and user engagement"]
+    },
     {
         type: "Internship",
         company: "Bharat Intern",
@@ -145,7 +422,9 @@ const initialInternships = [
         desc: "Specialized in Python-based ML models. Developed predictive algorithms and analyzed data trends using scikit-learn and pandas.",
         image: "images/certificates/BharatIntern.jpg",
         link: "#",
-        priority: true
+        priority: true,
+        technologies: ["Python", "scikit-learn", "Pandas", "NumPy"],
+        achievements: ["Developed 3 predictive models with 85%+ accuracy", "Processed and cleaned 10K+ data records", "Automated data preprocessing pipeline"]
     },
     {
         type: "Internship",
@@ -155,17 +434,21 @@ const initialInternships = [
         desc: "Full-stack development focus. Implemented responsive UI components and optimized backend logic for web applications.",
         image: "images/certificates/OasisIfobytes.jpg",
         link: "#",
-        priority: true
+        priority: true,
+        technologies: ["React", "Node.js", "CSS", "JavaScript"],
+        achievements: ["Built 5+ responsive UI components", "Reduced page load time by 40%", "Integrated RESTful APIs with frontend"]
     },
     {
         type: "Experience",
-        company: "Personal Lab",
-        role: "AI Experimenter",
-        duration: "ongoing",
-        desc: "Researching on custom Transformer architectures and exploring LLM fine-tuning techniques for specialized tasks.",
+        company: "Business Analyst",
+        role: "Business Analyst",
+        duration: "2024 - Present",
+        desc: "Translating business needs into technical requirements, analyzing workflows, and supporting decision-making through data-driven process evaluation and solution planning.",
         image: "images/projects/project-2-thumb.png",
         link: "#",
-        priority: false
+        priority: false,
+        technologies: ["Business Analysis", "Requirements Gathering", "Process Mapping", "Data-Driven Decisions"],
+        achievements: ["Defined requirements for technical initiatives", "Improved process clarity and alignment across teams", "Supported solution planning with actionable insights"]
     }
 ];
 
@@ -242,21 +525,35 @@ const initialStats = [
     { label: "Experience", value: initialInternships.filter(i => i.type === 'Experience').length }
 ];
 
-const CURRENT_VERSION = '3.2';
+const initialResearch = [];
+
+const initialGitHubData = {
+    username: "LeelaprasadPaila",
+    contributions: 0,
+    repos: 0,
+    stars: 0,
+    openSourceContributions: 0,
+    lastUpdated: null
+};
+
+const CURRENT_VERSION = '3.4';
 
 export const getData = (key) => {
     const version = localStorage.getItem('portfolio_data_version');
 
-    // Global version migration
+    // Global version migration - only migrate once per version, no reload
     if (version !== CURRENT_VERSION) {
         localStorage.setItem('portfolio_data_version', CURRENT_VERSION);
-        // Force reset structured data to pick up new schema/categories
-        localStorage.removeItem(STORAGE_KEYS.CERTS);
-        localStorage.removeItem(STORAGE_KEYS.PROJECTS);
-        localStorage.removeItem(STORAGE_KEYS.TECH_SKILLS);
-        localStorage.removeItem(STORAGE_KEYS.STATS);
-        localStorage.removeItem(STORAGE_KEYS.INTERNSHIPS);
-        window.location.reload();
+        // Only reset if upgrading from an older version to pick up schema changes
+        if (version && version < CURRENT_VERSION) {
+            localStorage.removeItem(STORAGE_KEYS.CERTS);
+            localStorage.removeItem(STORAGE_KEYS.PROJECTS);
+            localStorage.removeItem(STORAGE_KEYS.TECH_SKILLS);
+            localStorage.removeItem(STORAGE_KEYS.STATS);
+            localStorage.removeItem(STORAGE_KEYS.INTERNSHIPS);
+            localStorage.removeItem(STORAGE_KEYS.RESEARCH);
+            localStorage.removeItem(STORAGE_KEYS.GITHUB);
+        }
     }
 
     let data = localStorage.getItem(key);
@@ -271,6 +568,8 @@ export const getData = (key) => {
         if (key === STORAGE_KEYS.TESTIMONIALS) saveData(key, initialTestimonials);
         if (key === STORAGE_KEYS.STATS) saveData(key, initialStats);
         if (key === STORAGE_KEYS.INTERNSHIPS) saveData(key, initialInternships);
+        if (key === STORAGE_KEYS.RESEARCH) saveData(key, initialResearch);
+        if (key === STORAGE_KEYS.GITHUB) saveData(key, initialGitHubData);
 
         const map = {
             [STORAGE_KEYS.BIO]: initialBio,
@@ -286,7 +585,9 @@ export const getData = (key) => {
                 { label: "Internships", value: initialInternships.filter(i => i.type === 'Internship').length },
                 { label: "Experience", value: initialInternships.filter(i => i.type === 'Experience').length }
             ],
-            [STORAGE_KEYS.INTERNSHIPS]: initialInternships
+            [STORAGE_KEYS.INTERNSHIPS]: initialInternships,
+            [STORAGE_KEYS.RESEARCH]: initialResearch,
+            [STORAGE_KEYS.GITHUB]: initialGitHubData
         };
         return map[key];
     }
@@ -298,3 +599,4 @@ export const saveData = (key, data) => {
 };
 
 export { STORAGE_KEYS };
+export { initialTechSkills, initialProjects, initialInternships, initialCerts, initialBio, initialResearch, initialGitHubData };

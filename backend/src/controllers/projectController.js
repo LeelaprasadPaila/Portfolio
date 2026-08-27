@@ -8,16 +8,27 @@ export const getProjects = async (req, res) => {
     const limit = parseInt(req.query.limit) || 100;
     const skip = (page - 1) * limit;
 
-    const projects = await Project.find()
-      .lean()
-      .sort({ priority: -1, createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
+    // Public endpoint: only return non-archived projects
+    const projects = await Project.find({ archived: { $ne: true } }).lean();
 
-    const total = await Project.countDocuments();
+    // Check if custom sortOrder has been applied (any item has sortOrder > 0)
+    const hasCustomOrder = projects.some(p => p.sortOrder && p.sortOrder > 0);
+    if (hasCustomOrder) {
+      // Use admin-defined order
+      projects.sort((a, b) => (a.sortOrder || 999) - (b.sortOrder || 999));
+    } else {
+      // Auto-sort by priority then createdAt (most recent first)
+      projects.sort((a, b) => {
+        if (a.priority !== b.priority) return (b.priority ? 1 : 0) - (a.priority ? 1 : 0);
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+    }
+
+    const paginated = projects.slice(skip, skip + limit);
+    const total = await Project.countDocuments({ archived: { $ne: true } });
 
     res.json({
-      projects,
+      projects: paginated,
       pagination: {
         page,
         limit,
@@ -30,9 +41,77 @@ export const getProjects = async (req, res) => {
   }
 };
 
+/**
+ * Admin-only endpoint: returns ALL projects including archived ones.
+ * Requires auth token (protected in routes).
+ */
+export const getAllProjects = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 1000;
+    const skip = (page - 1) * limit;
+
+    const projects = await Project.find().lean();
+
+    // Check if custom sortOrder has been applied (any item has sortOrder > 0)
+    const hasCustomOrder = projects.some(p => p.sortOrder && p.sortOrder > 0);
+    if (hasCustomOrder) {
+      // Use admin-defined order
+      projects.sort((a, b) => (a.sortOrder || 999) - (b.sortOrder || 999));
+    } else {
+      // Auto-sort by priority then createdAt (most recent first)
+      projects.sort((a, b) => {
+        if (a.priority !== b.priority) return (b.priority ? 1 : 0) - (a.priority ? 1 : 0);
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+    }
+
+    const paginated = projects.slice(skip, skip + limit);
+    const total = await Project.countDocuments();
+
+    res.json({
+      projects: paginated,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit)
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message, error: true });
+  }
+};
+
+export const reorderProjects = async (req, res) => {
+  try {
+    const { orderedIds } = req.body;
+    if (!Array.isArray(orderedIds)) {
+      return res.status(400).json({ message: 'orderedIds array is required', error: true });
+    }
+    // Filter out any IDs that are undefined/null (new items without _id)
+    const validIds = orderedIds.filter(id => id);
+    if (validIds.length === 0) {
+      return res.status(400).json({ message: 'No valid IDs provided', error: true });
+    }
+    const bulkOps = validIds.map((id, index) => ({
+      updateOne: {
+        filter: { _id: id },
+        update: { $set: { sortOrder: index + 1 } }, // start from 1 so 0 means unset
+      },
+    }));
+    await Project.bulkWrite(bulkOps);
+    const projects = await Project.find().lean();
+    projects.sort((a, b) => (a.sortOrder || 999) - (b.sortOrder || 999));
+    res.json({ message: 'Reordered successfully', projects });
+  } catch (error) {
+    res.status(500).json({ message: error.message, error: true });
+  }
+};
+
 export const createProject = async (req, res) => {
   try {
-    const { category, title, desc, link, githubLink, videoUrl, meta, priority } = req.body;
+    const { category, title, desc, link, githubLink, videoUrl, meta, priority, archived, sortOrder } = req.body;
 
     if (!category || !title) {
       return res.status(400).json({ message: 'Category and title are required', error: true });
@@ -47,6 +126,8 @@ export const createProject = async (req, res) => {
       videoUrl,
       meta,
       priority: priority === 'true' || priority === true,
+      archived: archived === 'true' || archived === true,
+      sortOrder: sortOrder !== undefined ? Number(sortOrder) : undefined,
     };
 
     // Handle file upload
@@ -70,7 +151,7 @@ export const updateProject = async (req, res) => {
       return res.status(404).json({ message: 'Project not found', error: true });
     }
 
-    const { category, title, desc, link, githubLink, videoUrl, meta, priority } = req.body;
+    const { category, title, desc, link, githubLink, videoUrl, meta, priority, archived, sortOrder } = req.body;
 
     project.category = category || project.category;
     project.title = title || project.title;
@@ -80,6 +161,10 @@ export const updateProject = async (req, res) => {
     project.videoUrl = videoUrl !== undefined ? videoUrl : project.videoUrl;
     project.meta = meta || project.meta;
     project.priority = priority !== undefined ? (priority === 'true' || priority === true) : project.priority;
+    project.archived = archived !== undefined ? (archived === 'true' || archived === true) : project.archived;
+    if (sortOrder !== undefined) {
+      project.sortOrder = Number(sortOrder);
+    }
 
     // Handle file upload
     if (req.file) {
@@ -122,4 +207,4 @@ export const deleteProject = async (req, res) => {
   }
 };
 
-export default { getProjects, createProject, updateProject, deleteProject };
+export default { getProjects, getAllProjects, createProject, updateProject, deleteProject, reorderProjects };

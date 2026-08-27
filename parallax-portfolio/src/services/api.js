@@ -4,7 +4,7 @@
  */
 
 import ENV from '../config/env';
-import { STORAGE_KEYS } from '../data/dataStore';
+import { STORAGE_KEYS, getData } from '../data/dataStore';
 
 const API_URL = ENV.API_URL;
 const CACHE_ENABLED = !ENV.IS_DEV;
@@ -42,7 +42,12 @@ const apiCall = async (endpoint, options = {}) => {
     delete headers['Content-Type'];
   }
 
+  // Emit loading start event (delta +1)
   try {
+    if (typeof window !== 'undefined' && window.dispatchEvent) {
+      window.dispatchEvent(new CustomEvent('api:loading', { detail: { delta: 1 } }));
+    }
+
     const response = await fetch(`${API_URL}${endpoint}`, {
       ...options,
       headers,
@@ -63,6 +68,15 @@ const apiCall = async (endpoint, options = {}) => {
   } catch (error) {
     console.error(`[API-ERROR] ${endpoint}:`, error.message);
     throw error;
+  } finally {
+    // Emit loading end event (delta -1)
+    try {
+      if (typeof window !== 'undefined' && window.dispatchEvent) {
+        window.dispatchEvent(new CustomEvent('api:loading', { detail: { delta: -1 } }));
+      }
+    } catch (_) {
+      // noop
+    }
   }
 };
 
@@ -90,21 +104,21 @@ export const verifyAuth = () => apiCall('/auth/verify');
 
 // Contact API
 export const submitContactForm = (payload) =>
-  apiCall('/contact', {
+  apiCall('/contacts/submit', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
 
-export const getContacts = () => apiCall('/contact');
+export const getContacts = () => apiCall('/contacts');
 
 export const updateContactStatus = (id, data) =>
-  apiCall(`/contact/${id}`, {
+  apiCall(`/contacts/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   });
 
 export const deleteContact = (id) =>
-  apiCall(`/contact/${id}`, {
+  apiCall(`/contacts/${id}`, {
     method: 'DELETE',
   });
 
@@ -125,8 +139,27 @@ const normalizeListResponse = (data) => {
   return [];
 };
 
+const getLocalFallbackList = (key, archivedFilter = false) => {
+  const fallback = getData(key);
+  if (!Array.isArray(fallback)) return [];
+  return archivedFilter ? fallback.filter(item => !item.archived) : fallback;
+};
+
 // Projects API
-export const getProjects = async () => normalizeListResponse(await apiCall('/projects'));
+// Public: backend already filters archived projects, but filter defensively too
+export const getProjects = async () => {
+  try {
+    const projects = normalizeListResponse(await apiCall('/projects'));
+    const visibleProjects = Array.isArray(projects) ? projects.filter(p => !p.archived) : [];
+    if (visibleProjects.length > 0) return visibleProjects;
+  } catch (error) {
+    console.warn('[API] /projects failed, using local fallback.', error.message);
+  }
+  return getLocalFallbackList(STORAGE_KEYS.PROJECTS, true);
+};
+
+// Admin-only: Get ALL projects including archived ones
+export const getAllProjects = async () => normalizeListResponse(await apiCall('/projects/all'));
 
 export const createProject = (formData) =>
   apiCall('/projects', {
@@ -146,8 +179,26 @@ export const deleteProject = (id) =>
     method: 'DELETE',
   });
 
+export const reorderProjects = (orderedIds) =>
+  apiCall('/projects/reorder', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ orderedIds }),
+  });
+
 // Internships API
-export const getInternships = async () => normalizeListResponse(await apiCall('/internships'));
+export const getInternships = async () => {
+  try {
+    const internships = normalizeListResponse(await apiCall('/internships'));
+    const visibleInternships = Array.isArray(internships) ? internships.filter(i => !i.archived) : [];
+    if (visibleInternships.length > 0) return visibleInternships;
+  } catch (error) {
+    console.warn('[API] /internships failed, using local fallback.', error.message);
+  }
+  return getLocalFallbackList(STORAGE_KEYS.INTERNSHIPS, true);
+};
+
+export const getAllInternships = async () => normalizeListResponse(await apiCall('/internships/all'));
 
 export const createInternship = (formData) =>
   apiCall('/internships', {
@@ -164,6 +215,13 @@ export const updateInternship = (id, formData) =>
 export const deleteInternship = (id) =>
   apiCall(`/internships/${id}`, {
     method: 'DELETE',
+  });
+
+export const reorderInternships = (orderedIds) =>
+  apiCall('/internships/reorder', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ orderedIds }),
   });
 
 // Skills API
@@ -188,7 +246,18 @@ export const deleteSkill = (id) =>
   });
 
 // Certificates API
-export const getCertificates = async () => normalizeListResponse(await apiCall('/certificates?limit=1000'));
+export const getCertificates = async () => {
+  try {
+    const certificates = normalizeListResponse(await apiCall('/certificates?limit=1000'));
+    const visibleCertificates = Array.isArray(certificates) ? certificates.filter(c => !c.archived) : [];
+    if (visibleCertificates.length > 0) return visibleCertificates;
+  } catch (error) {
+    console.warn('[API] /certificates failed, using local fallback.', error.message);
+  }
+  return getLocalFallbackList(STORAGE_KEYS.CERTS, true);
+};
+
+export const getAllCertificates = async () => normalizeListResponse(await apiCall('/certificates/all'));
 
 export const createCertificate = (formData) =>
   apiCall('/certificates', {
@@ -233,6 +302,43 @@ export const updateById = async (key, id, item) => {
 };
 
 export { STORAGE_KEYS };
+
+// ====== AI Knowledge Base API ======
+
+/**
+ * Get AI knowledge base training status
+ */
+export const getAIStatus = () => apiCall('/ai/status');
+
+/**
+ * Get full AI knowledge base for client-side initialization
+ */
+export const getAIKnowledge = () => apiCall('/ai/knowledge');
+
+/**
+ * Trigger immediate AI training (admin only - requires auth)
+ */
+export const trainAI = () =>
+  apiCall('/ai/train/sync', {
+    method: 'POST',
+  });
+
+/**
+ * Start async AI training (admin only - returns immediately)
+ */
+export const trainAIAsync = () =>
+  apiCall('/ai/train', {
+    method: 'POST',
+  });
+
+/**
+ * Query the AI knowledge base with a question
+ */
+export const queryAI = (question) =>
+  apiCall('/ai/query', {
+    method: 'POST',
+    body: JSON.stringify({ question }),
+  });
 
 export default {
   getAuthToken,

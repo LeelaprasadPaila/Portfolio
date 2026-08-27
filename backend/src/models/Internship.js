@@ -4,7 +4,7 @@ const internshipSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ['Internship', 'Experience'],
+      enum: ['Internship', 'Experience', 'Research', 'Leadership', 'Education'],
       required: [true, 'Type is required'],
     },
     company: {
@@ -22,6 +22,22 @@ const internshipSchema = new mongoose.Schema(
     priority: {
       type: Boolean,
       default: false,
+    },
+    archived: {
+      type: Boolean,
+      default: false,
+    },
+    technologies: {
+      type: [String],
+      default: [],
+    },
+    achievements: {
+      type: [String],
+      default: [],
+    },
+    sortOrder: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

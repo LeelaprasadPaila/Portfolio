@@ -37,19 +37,10 @@ export const submitContact = async (req, res) => {
       return res.status(400).json({ message: 'Name, email, and message are required', error: true });
     }
 
-    const contact = new Contact({
-      name,
-      email,
-      phone,
-      message,
+    return res.status(410).json({
+      message: 'Legacy backend email flow is disabled. Please use the public Formspree contact form for submissions.',
+      error: true,
     });
-
-    await contact.save();
-
-    // Send email
-    await sendContactEmail({ name, email, phone, message });
-
-    res.status(201).json({ message: 'Message submitted successfully', contact });
   } catch (error) {
     res.status(500).json({ message: error.message, error: true });
   }

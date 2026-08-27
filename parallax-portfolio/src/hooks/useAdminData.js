@@ -1,10 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import * as api from '../services/api';
-import { getData, STORAGE_KEYS } from '../data/dataStore';
 
 /**
- * useAdminData Hook
- * Centralized logic for managing administrator state and backend synchronization.
+ * useAdminData Hook - MongoDB ONLY (no localStorage fallback)
+ * Centralized state management for admin panel with full backend sync.
  */
 export const useAdminData = (isAuthenticated) => {
   const [loading, setLoading] = useState(false);
@@ -19,7 +18,8 @@ export const useAdminData = (isAuthenticated) => {
     techSkills: [],
     internships: [],
     testimonials: [],
-    stats: []
+    stats: [],
+    contacts: []
   });
 
   const showNotification = (msg, type = 'success') => {
@@ -31,24 +31,37 @@ export const useAdminData = (isAuthenticated) => {
     if (!isAuthenticated) return;
     setLoading(true);
     try {
-      const [bio, projects, certs, internships, skills] = await Promise.all([
-        api.getBio().catch(() => getData(STORAGE_KEYS.BIO)),
-        api.getProjects().catch(() => getData(STORAGE_KEYS.PROJECTS)),
-        api.getCertificates().catch(() => getData(STORAGE_KEYS.CERTS)),
-        api.getInternships().catch(() => getData(STORAGE_KEYS.INTERNSHIPS)),
-        api.getSkills().catch(() => getData(STORAGE_KEYS.SKILLS))
+      const [bio, projects, certs, internships, skills, contacts] = await Promise.all([
+        api.getBio(),
+        api.getAllProjects(),
+        api.getCertificates(),
+        api.getInternships(),
+        api.getSkills(),
+        api.getContacts()
       ]);
 
+      // Compute stats from actual data
+      const stats = [
+        { label: 'Certificates', value: Array.isArray(certs) ? certs.length : 0 },
+        { label: 'Projects', value: Array.isArray(projects) ? projects.length : 0 },
+        { label: 'Internships', value: Array.isArray(internships) ? internships.filter(i => i.type === 'Internship').length : 0 },
+        { label: 'Experience', value: Array.isArray(internships) ? internships.filter(i => i.type === 'Experience').length : 0 }
+      ];
+
       setData({
-        bio,
-        projects,
-        certs,
-        internships,
-        skills,
-        techSkills: getData(STORAGE_KEYS.TECH_SKILLS),
-        testimonials: getData(STORAGE_KEYS.TESTIMONIALS),
-        stats: getData(STORAGE_KEYS.STATS)
+        bio: bio || {},
+        projects: Array.isArray(projects) ? projects : [],
+        certs: Array.isArray(certs) ? certs : [],
+        internships: Array.isArray(internships) ? internships : [],
+        skills: Array.isArray(skills) ? skills : [],
+        techSkills: [],
+        testimonials: [],
+        stats,
+        contacts: Array.isArray(contacts) ? contacts : []
       });
+    } catch (error) {
+      console.error('[Admin Data] Fetch error:', error);
+      showNotification('Failed to load data from database: ' + error.message, 'error');
     } finally {
       setLoading(false);
     }
@@ -62,23 +75,12 @@ export const useAdminData = (isAuthenticated) => {
     setLoading(true);
     try {
       if (apiHandler) {
-        if (key === STORAGE_KEYS.BIO) {
-          await apiHandler(updatedValue);
-        } else if (Array.isArray(updatedValue)) {
-          // Sync logic for lists
-          for (const item of updatedValue) {
-            if (item._id) {
-              await api.updateById(key, item._id, item);
-            } else {
-              await api.createOne(key, item);
-            }
-          }
-        }
+        await apiHandler(updatedValue);
       }
       
       // Update local state
       setData(prev => ({ ...prev, [key]: updatedValue }));
-      showNotification(message || 'Synchronized with mainframe.');
+      showNotification(message || 'Data synchronized with database.');
     } catch (err) {
       showNotification(`Sync Error: ${err.message}`, 'error');
     } finally {

@@ -1,60 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm, ValidationError } from '@formspree/react';
 import NeuralBackground from './NeuralBackground';
-import { submitContactForm } from '../services/api';
 import '../styles/Contact.css';
 
 const Contact = ({ isActive, onClose }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  
-  const [formStatus, setFormStatus] = useState('Send Message');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Validate form
-    if (!formData.name || !formData.email || !formData.message) {
-      setFormStatus('Please fill in all required fields');
-      setTimeout(() => setFormStatus('Send Message'), 3000);
-      return;
-    }
-
-    setIsSubmitting(true);
-    setFormStatus('Sending...');
-
-    try {
-      await submitContactForm(formData);
-      
-      setFormStatus('Message Sent Successfully!');
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      
-      setTimeout(() => {
-        setFormStatus('Send Message');
-        setIsSubmitting(false);
-      }, 3000);
-    } catch (error) {
-      console.error('Error sending message:', error);
-      setFormStatus('Send Failed. Try again.');
-      
-      setTimeout(() => {
-        setFormStatus('Send Message');
-        setIsSubmitting(false);
-      }, 3000);
-    }
-  };
+  const [state, handleSubmit] = useForm("xeeyvwjy");
 
   return (
     <section id="contact" className={`section-overlay ${isActive ? 'active' : ''}`}>
@@ -80,8 +30,8 @@ const Contact = ({ isActive, onClose }) => {
               <i className="fas fa-envelope"></i>
               <h3>Email</h3>
               <p>
-                <a href="mailto:pailalee99@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>
-                  pailalee99@gmail.com
+                <a href="mailto:pailaleelaprasad@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>
+                  pailaleelaprasad@gmail.com
                 </a>
               </p>
             </div>
@@ -113,78 +63,87 @@ const Contact = ({ isActive, onClose }) => {
 
           {/* Contact Form */}
           <div className="contact-form-wrapper">
-            <form onSubmit={handleSubmit}>
-              {/* Name and Email Row */}
-              <div className="form-row">
+            {state.succeeded ? (
+              <div className="form-success">
+                <i className="fas fa-check-circle" style={{ fontSize: '3rem', color: 'var(--primary-color)', marginBottom: '1rem' }}></i>
+                <h3>Thank you!</h3>
+                <p>Your message has been sent successfully. I'll get back to you soon!</p>
+                <button className="form-submit" onClick={() => window.location.reload()} style={{ marginTop: '1rem' }}>
+                  Send Another Message
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                {/* Name and Email Row */}
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="name">Full Name *</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      placeholder="John Doe"
+                      required
+                    />
+                    <ValidationError prefix="Name" field="name" errors={state.errors} />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="email">Email Address *</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="john@example.com"
+                      required
+                    />
+                    <ValidationError prefix="Email" field="email" errors={state.errors} />
+                  </div>
+                </div>
+
+                {/* Subject */}
                 <div className="form-group">
-                  <label htmlFor="name">Full Name *</label>
+                  <label htmlFor="subject">Subject</label>
                   <input
                     type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="John Doe"
-                    required
+                    id="subject"
+                    name="subject"
+                    placeholder="What's this about?"
                   />
                 </div>
+
+                {/* Message */}
                 <div className="form-group">
-                  <label htmlFor="email">Email Address *</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="john@example.com"
+                  <label htmlFor="message">Message *</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    placeholder="Share your thoughts, questions, or project ideas..."
                     required
-                  />
+                  ></textarea>
+                  <ValidationError prefix="Message" field="message" errors={state.errors} />
                 </div>
-              </div>
 
-              {/* Subject */}
-              <div className="form-group">
-                <label htmlFor="subject">Subject</label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleInputChange}
-                  placeholder="What's this about?"
-                />
-              </div>
+                {/* Submit Button */}
+                <button 
+                  type="submit" 
+                  className="form-submit"
+                  disabled={state.submitting}
+                >
+                  {state.submitting ? (
+                    <><i className="fas fa-spinner fa-spin"></i> Sending...</>
+                  ) : (
+                    <><i className="fas fa-paper-plane"></i> Send Message</>
+                  )}
+                </button>
 
-              {/* Message */}
-              <div className="form-group">
-                <label htmlFor="message">Message *</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  placeholder="Share your thoughts, questions, or project ideas..."
-                  required
-                ></textarea>
-              </div>
-
-              {/* Submit Button */}
-              <button 
-                type="submit" 
-                className="form-submit"
-                disabled={isSubmitting}
-              >
-                <i className="fas fa-paper-plane"></i>
-                {formStatus}
-              </button>
-
-              {/* Status Message */}
-              {formStatus !== 'Send Message' && (
-                <div className="form-status">
-                  {formStatus}
-                </div>
-              )}
-            </form>
+                {/* Error Message */}
+                {state.errors && state.errors.length > 0 && (
+                  <div className="form-status" style={{ color: '#ff6b6b', marginTop: '1rem' }}>
+                    <i className="fas fa-exclamation-circle"></i> Something went wrong. Please try again.
+                  </div>
+                )}
+              </form>
+            )}
           </div>
         </div>
       </div>

@@ -14,6 +14,7 @@ import certificateRoutes from './routes/certificateRoutes.js';
 import internshipRoutes from './routes/internshipRoutes.js';
 import skillRoutes from './routes/skillRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 dotenv.config();
 
@@ -32,6 +33,8 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   process.env.FRONTEND_PROD_URL,
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
   'http://localhost:5174',
   'http://127.0.0.1:5174',
 ].filter(Boolean);
@@ -63,6 +66,7 @@ app.use('/api/certificates', certificateRoutes);
 app.use('/api/internships', internshipRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/contacts', contactRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -76,6 +80,29 @@ app.use((req, res) => {
 
 // Error handling
 app.use(errorHandler);
+
+// ====== Daily AI Knowledge Training (scheduled) ======
+import cron from 'node-cron';
+import { trainAIKnowledge } from './services/aiTrainer.js';
+
+// Schedule daily training at midnight (00:00)
+cron.schedule('0 0 * * *', async () => {
+  console.log('\n⏰ [CRON] Starting daily AI knowledge training...');
+  console.log(`   ${new Date().toISOString()}`);
+  
+  try {
+    const result = await trainAIKnowledge();
+    console.log(`✅ [CRON] Daily training completed: v${result.version}`);
+    console.log(`   Stats: ${JSON.stringify(result.stats)}`);
+  } catch (error) {
+    console.error('❌ [CRON] Daily training failed:', error.message);
+  }
+}, {
+  scheduled: true,
+  timezone: 'UTC'
+});
+
+console.log('📅 Daily AI training scheduled (midnight UTC)');
 
 app.listen(PORT, () => {
   console.log(`\n🚀 Server running on http://localhost:${PORT}`);

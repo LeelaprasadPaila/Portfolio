@@ -1,0 +1,327 @@
+/* ============================================
+   CREDIBILITY STATS SECTION
+   Premium stat cards with count-up animations
+   ============================================ */
+
+.credibility-section {
+    position: relative;
+    padding: 6rem 2rem;
+    background: var(--color-bg-primary, #020205);
+    overflow: hidden;
+}
+
+.credibility-bg-gradient {
+    position: absolute;
+    top: -200px;
+    left: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0, 242, 255, 0.03), transparent 70%);
+    pointer-events: none;
+}
+
+.credibility-bg-gradient-2 {
+    position: absolute;
+    bottom: -200px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.03), transparent 70%);
+    pointer-events: none;
+}
+
+.credibility-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* === Header === */
+.credibility-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+}
+
+.credibility-badge {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-accent, #00f2ff);
+    background: rgba(0, 242, 255, 0.08);
+    border: 1px solid rgba(0, 242, 255, 0.1);
+    border-radius: 100px;
+    margin-bottom: 1rem;
+}
+
+.credibility-title {
+    font-family: var(--font-display, 'Outfit', sans-serif);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1.1;
+    margin: 0 0 0.8rem;
+    background: linear-gradient(135deg, #fff 60%, rgba(255,255,255,0.6));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.credibility-subtitle {
+    font-size: 1.05rem;
+    color: var(--color-text-secondary, rgba(255,255,255,0.7));
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* === Stats Grid === */
+.credibility-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
+}
+
+/* === Card === */
+.credibility-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 2rem 1.5rem;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: default;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.credibility-card-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.credibility-card:nth-child(1) { transition-delay: 0.05s; }
+.credibility-card:nth-child(2) { transition-delay: 0.1s; }
+.credibility-card:nth-child(3) { transition-delay: 0.15s; }
+.credibility-card:nth-child(4) { transition-delay: 0.2s; }
+.credibility-card:nth-child(5) { transition-delay: 0.25s; }
+.credibility-card:nth-child(6) { transition-delay: 0.3s; }
+.credibility-card:nth-child(7) { transition-delay: 0.35s; }
+.credibility-card:nth-child(8) { transition-delay: 0.4s; }
+
+.credibility-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--card-color, #00f2ff);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(0, 242, 255, 0.05);
+}
+
+/* === Card Icon === */
+.credibility-card-icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    flex-shrink: 0;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.credibility-card-icon svg {
+    width: 24px;
+    height: 24px;
+    color: var(--card-color, #00f2ff);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.credibility-card:hover .credibility-card-icon {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--card-color, #00f2ff);
+}
+
+.credibility-card:hover .credibility-card-icon svg {
+    transform: scale(1.15) rotate(-5deg);
+}
+
+/* === Card Content === */
+.credibility-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.credibility-stat-number {
+    font-family: var(--font-display, 'Outfit', sans-serif);
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    font-weight: 900;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, var(--card-color, #00f2ff), rgba(255,255,255,0.9));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+}
+
+.credibility-card-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #fff);
+    line-height: 1.3;
+    margin-top: 0.2rem;
+}
+
+.credibility-card-desc {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary, rgba(255,255,255,0.4));
+    line-height: 1.4;
+    margin: 0;
+    max-width: 180px;
+}
+
+/* === Card Glow === */
+.credibility-card-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        ellipse at 50% 0%,
+        var(--card-color, transparent) 0%,
+        transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.credibility-card:hover .credibility-card-glow {
+    opacity: 0.08;
+}
+
+/* === Card Border === */
+.credibility-card-border {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, var(--card-color, transparent), transparent 50%) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.credibility-card:hover .credibility-card-border {
+    opacity: 0.3;
+}
+
+/* === Responsive === */
+@media (max-width: 1024px) {
+    .credibility-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .credibility-section {
+        padding: 4rem 1rem;
+    }
+
+    .credibility-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+
+    .credibility-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .credibility-card-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+    }
+
+    .credibility-card-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .credibility-stat-number {
+        font-size: 1.8rem;
+    }
+
+    .credibility-card-label {
+        font-size: 0.8rem;
+    }
+
+    .credibility-card-desc {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .credibility-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
+    }
+
+    .credibility-card {
+        padding: 1.2rem 0.8rem;
+        border-radius: 14px;
+    }
+
+    .credibility-stat-number {
+        font-size: 1.5rem;
+    }
+
+    .credibility-card-label {
+        font-size: 0.75rem;
+    }
+}
+
+@media (min-width: 1920px) {
+    .credibility-grid {
+        gap: 1.5rem;
+    }
+}
+
+/* === Reduced Motion === */
+@media (prefers-reduced-motion: reduce) {
+    .credibility-card {
+        opacity: 1;
+        transform: none;
+    }
+
+    .credibility-stat-number {
+        background: none;
+        color: var(--card-color);
+    }
+
+    .credibility-card-icon svg {
+        transition: none;
+    }
+
+    .credibility-card:hover .credibility-card-icon svg {
+        transform: none;
+    }
+}

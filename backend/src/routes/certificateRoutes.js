@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import {
   getCertificates,
+  getAllCertificates,
   createCertificate,
   updateCertificate,
   deleteCertificate,
@@ -22,6 +23,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
 
+router.get('/all', verifyToken, getAllCertificates);
 router.get('/', getCertificates);
 router.post('/', verifyToken, upload.single('image'), validateFileUpload, createCertificate);
 router.put('/:id', verifyToken, upload.single('image'), validateFileUpload, updateCertificate);

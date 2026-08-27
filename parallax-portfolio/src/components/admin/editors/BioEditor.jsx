@@ -1,10 +1,9 @@
 import React from 'react';
-import { STORAGE_KEYS } from '../../../data/dataStore';
 import * as api from '../../../services/api';
 
 /**
  * BioEditor Component
- * Responsible for identity profile and metadata management.
+ * MongoDB-backed identity profile management.
  */
 const BioEditor = ({ bio, onUpdate, loading }) => {
   const calculatedAge = () => {
@@ -20,11 +19,11 @@ const BioEditor = ({ bio, onUpdate, loading }) => {
   };
 
   const handleFieldChange = (key, value) => {
-    onUpdate(STORAGE_KEYS.BIO, { ...bio, [key]: value });
+    onUpdate('bio', { ...bio, [key]: value });
   };
 
   const handleSave = () => {
-    onUpdate(STORAGE_KEYS.BIO, bio, 'Identity Synchronized.', api.updateBio);
+    onUpdate('bio', bio, 'Identity Synchronized.', api.updateBio);
   };
 
   return (

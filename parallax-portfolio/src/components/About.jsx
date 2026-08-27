@@ -105,7 +105,7 @@ const About = ({ isActive, onClose }) => {
         <div className="about-content">
           <div className="about-image">
             <div className="image-frame">
-              <img src="/images/Portfolio_image.png" alt="Profile" />
+              <img src={aboutData.profileImage || "/images/Portfolio_image.png"} alt="Profile" />
             </div>
             <div className="experience-badge">
               <span className="years">AI NATIVE</span>
@@ -137,7 +137,7 @@ const About = ({ isActive, onClose }) => {
             <div className="quote-box">
               <i className="fas fa-quote-left quote-icon"></i>
               <p>
-                I evolved from traditional development to the frontier of 'Vibe Coding'—where human intent meets AI Agentic intelligence. As an AI Native Engineer, my craft is no longer just about logic and syntax; it's about orchestrating agents to build the impossible at the speed of thought. In this new paradigm, the only limit is the clarity of our vision.
+                I evolved from traditional development to the frontier of 'Vibe Coding' where human intent meets AI Agentic intelligence. As an AI Native Engineer, my craft is no longer just about logic and syntax; it's about orchestrating agents to build the impossible at the speed of thought. In this new paradigm, the only limit is the clarity of our vision.
               </p>
             </div>
           </div>
@@ -181,8 +181,7 @@ const About = ({ isActive, onClose }) => {
             </div>
           </div>
         </div>
-
-        <div className="testimonials-section">
+        {/* <div className="testimonials-section">
           <h3 className="sub-section-title center">Kind Words</h3>
           <div className="testimonials-grid-modern">
             {testimonials.map((t, i) => (
@@ -196,7 +195,7 @@ const About = ({ isActive, onClose }) => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

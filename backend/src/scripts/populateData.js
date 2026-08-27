@@ -136,6 +136,231 @@ const initialProjects = [
         link: "#",
         meta: "Python | Scikit-learn",
         priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# NeuroDVT",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# OTP-BYPASS",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# work-report-generator",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Currency_conversion_in_Java",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Asset-Managment-System",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Online-Fee-Payment_System",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# FilePulse-Pro",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Data_Size_Unit_Converter_in_C",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Email-Generator-Pro",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Indian-Hackers",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# LeelaprasadPaila",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# General_store-website_2",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Portfolio",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Home-security",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# recipe-api",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# LeelaPrasad_Portfolio",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# 20KT1A4238--PAILA-LEELA-PRASAD",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# CGV",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Portfolio-Website-Oasis",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Task3-OASIS-",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# House_Price_Prediction",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Wine_Quality_Prediction",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Iris_Flowers_Classification",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-2-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# Adventure_World_Website-Angular",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-3-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
+    },
+    {
+        category: "Portfolio Updates",
+        title: "# hotel-booking-system",
+        desc: "Project placeholder. Update this project once the details are ready.",
+        image: "images/projects/project-1-thumb.png",
+        link: "#",
+        meta: "Pending update",
+        priority: false
     }
 ];
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-  getProjects,
+  getAllProjects,
   createProject,
   updateProject,
   deleteProject,
+  reorderProjects,
 } from '../../services/api';
 import AdminForm from '../../components/admin/AdminForm';
 import AdminTable from '../../components/admin/AdminTable';
@@ -17,8 +18,11 @@ const AdminProjects = () => {
     title: '',
     desc: '',
     link: '',
+    githubLink: '',
+    videoUrl: '',
     meta: '',
     priority: false,
+    archived: false,
     image: null,
   });
 
@@ -29,7 +33,7 @@ const AdminProjects = () => {
   const loadProjects = async () => {
     try {
       setLoading(true);
-      const data = await getProjects();
+      const data = await getAllProjects();
       setProjects(Array.isArray(data) ? data : []);
     } catch (error) {
       alert('Error loading projects: ' + error.message);
@@ -48,8 +52,11 @@ const AdminProjects = () => {
       formDataObj.append('title', formData.title);
       formDataObj.append('desc', formData.desc);
       formDataObj.append('link', formData.link);
+      formDataObj.append('githubLink', formData.githubLink);
+      formDataObj.append('videoUrl', formData.videoUrl);
       formDataObj.append('meta', formData.meta);
       formDataObj.append('priority', formData.priority);
+      formDataObj.append('archived', formData.archived);
 
       if (formData.image instanceof File) {
         formDataObj.append('image', formData.image);
@@ -93,8 +100,11 @@ const AdminProjects = () => {
       title: '',
       desc: '',
       link: '',
+      githubLink: '',
+      videoUrl: '',
       meta: '',
       priority: false,
+      archived: false,
       image: null,
     });
     setEditingId(null);
@@ -110,10 +120,13 @@ const AdminProjects = () => {
           { name: 'category', label: 'Category', type: 'text', required: true },
           { name: 'title', label: 'Title', type: 'text', required: true },
           { name: 'desc', label: 'Description', type: 'textarea' },
-          { name: 'link', label: 'Link', type: 'url' },
-          { name: 'meta', label: 'Meta Info', type: 'text' },
+          { name: 'link', label: 'Live Link', type: 'url' },
+          { name: 'githubLink', label: 'GitHub Link', type: 'url' },
+          { name: 'videoUrl', label: 'Video URL', type: 'url' },
+          { name: 'meta', label: 'Tech Meta (pipe | separated)', type: 'text' },
           { name: 'image', label: 'Image', type: 'file', accept: 'image/*' },
           { name: 'priority', label: 'Priority', type: 'checkbox' },
+          { name: 'archived', label: 'Archived (hidden from public)', type: 'checkbox' },
         ]}
         formData={formData}
         setFormData={setFormData}
@@ -123,12 +136,59 @@ const AdminProjects = () => {
         submitText={editingId ? 'Update' : 'Add'}
       />
 
-      <h2>Projects List ({projects.length})</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem' }}>
+        <h2>Projects List ({projects.length})</h2>
+        <button
+          className="add-btn"
+          onClick={async () => {
+            const orderedIds = projects.map(p => p._id);
+            await reorderProjects(orderedIds);
+            loadProjects();
+          }}
+          style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+        >
+          <i className="fas fa-sort"></i> Save Current Order
+        </button>
+      </div>
       <AdminTable
-        columns={['category', 'title', 'priority']}
+        columns={['category', 'title', 'priority', 'archived']}
         data={projects}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        extraActions={(item, index) => (
+          <div style={{ display: 'inline-flex', gap: '4px', marginLeft: '8px' }}>
+            <button
+              className="btn-sm"
+              onClick={async (e) => {
+                e.stopPropagation();
+                if (index === 0) return;
+                const arr = [...projects];
+                [arr[index - 1], arr[index]] = [arr[index], arr[index - 1]];
+                setProjects(arr);
+              }}
+              title="Move Up"
+              style={{ padding: '2px 8px', fontSize: '0.75rem', opacity: index === 0 ? 0.3 : 1 }}
+              disabled={index === 0}
+            >
+              ↑
+            </button>
+            <button
+              className="btn-sm"
+              onClick={async (e) => {
+                e.stopPropagation();
+                if (index === projects.length - 1) return;
+                const arr = [...projects];
+                [arr[index], arr[index + 1]] = [arr[index + 1], arr[index]];
+                setProjects(arr);
+              }}
+              title="Move Down"
+              style={{ padding: '2px 8px', fontSize: '0.75rem', opacity: index === projects.length - 1 ? 0.3 : 1 }}
+              disabled={index === projects.length - 1}
+            >
+              ↓
+            </button>
+          </div>
+        )}
       />
     </div>
   );

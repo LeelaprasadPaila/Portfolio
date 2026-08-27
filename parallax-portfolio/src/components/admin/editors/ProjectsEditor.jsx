@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { STORAGE_KEYS } from '../../../data/dataStore';
 import * as api from '../../../services/api';
 
 /**
  * ProjectsEditor
- * Advanced portfolio management with filtering and real-time backend sync.
+ * MongoDB-backed portfolio project management with filtering, image upload, and real-time sync.
  */
 const ProjectsEditor = ({ projects, onUpdate, loading }) => {
   const [filter, setFilter] = useState('');
@@ -17,25 +16,92 @@ const ProjectsEditor = ({ projects, onUpdate, loading }) => {
       category: 'Machine Learning',
       title: 'New Portfolio Project',
       desc: 'Project overview and objectives...',
-      image: 'images/projects/project-1-thumb.png',
+      image: null,
       link: '#',
-      meta: 'Python | React'
+      githubLink: '',
+      videoUrl: '',
+      meta: 'Python | React',
+      priority: false,
+      archived: false
     };
-    onUpdate(STORAGE_KEYS.PROJECTS, [newProject, ...projects], 'New Project Entry Initialized locally.');
+    onUpdate('projects', [newProject, ...projects], 'New Project Entry Initialized.');
   };
 
   const handleFieldChange = (idx, key, value) => {
     const updated = [...projects];
-    updated[idx][key] = value;
-    onUpdate(STORAGE_KEYS.PROJECTS, updated);
+    updated[idx] = { ...updated[idx], [key]: value };
+    onUpdate('projects', updated);
+  };
+
+  const handleImageUpload = (idx, file) => {
+    if (!file) return;
+    const updated = [...projects];
+    updated[idx] = { ...updated[idx], imageFile: file, image: file.name };
+    onUpdate('projects', updated);
+  };
+
+  const handleMoveUp = (idx) => {
+    if (idx === 0) return;
+    const updated = [...projects];
+    [updated[idx - 1], updated[idx]] = [updated[idx], updated[idx - 1]];
+    onUpdate('projects', updated);
+  };
+
+  const handleMoveDown = (idx) => {
+    if (idx === projects.length - 1) return;
+    const updated = [...projects];
+    [updated[idx], updated[idx + 1]] = [updated[idx + 1], updated[idx]];
+    onUpdate('projects', updated);
   };
 
   const handleDelete = (idx) => {
-    onUpdate(STORAGE_KEYS.PROJECTS, projects.filter((_, i) => i !== idx), 'Project Entry Redacted.');
+    const item = projects[idx];
+    if (item._id) {
+      api.deleteProject(item._id).catch(console.error);
+    }
+    onUpdate('projects', projects.filter((_, i) => i !== idx), 'Project Entry Redacted.');
   };
 
   const handleSave = () => {
-    onUpdate(STORAGE_KEYS.PROJECTS, projects, 'Projects Mainframe Synchronized.', api.createProject);
+    // Assign sortOrder based on array index before syncing
+    const itemsWithOrder = projects.map((item, index) => ({
+      ...item,
+      sortOrder: index
+    }));
+    onUpdate('projects', itemsWithOrder, 'Projects synchronized with database.', async () => {
+      for (const project of itemsWithOrder) {
+        const { imageFile, ...projectData } = project;
+        
+        if (project._id) {
+          if (imageFile) {
+            // Use FormData for image upload
+            const formData = new FormData();
+            Object.keys(projectData).forEach(key => {
+              if (projectData[key] !== undefined && projectData[key] !== null) {
+                formData.append(key, projectData[key]);
+              }
+            });
+            formData.append('image', imageFile);
+            await api.updateProject(project._id, formData);
+          } else {
+            await api.updateProject(project._id, projectData);
+          }
+        } else {
+          if (imageFile) {
+            const formData = new FormData();
+            Object.keys(projectData).forEach(key => {
+              if (projectData[key] !== undefined && projectData[key] !== null) {
+                formData.append(key, projectData[key]);
+              }
+            });
+            formData.append('image', imageFile);
+            await api.createProject(formData);
+          } else {
+            await api.createProject(projectData);
+          }
+        }
+      }
+    });
   };
 
   const filteredProjects = projects.filter(p => 
@@ -95,19 +161,76 @@ const ProjectsEditor = ({ projects, onUpdate, loading }) => {
                   <input type="text" className="admin-input" value={project.meta} onChange={(e) => handleFieldChange(idx, 'meta', e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>IMAGE URL</label>
-                  <input type="text" className="admin-input" value={project.image} onChange={(e) => handleFieldChange(idx, 'image', e.target.value)} />
-                </div>
-                <div className="form-group">
                   <label>LIVE LINK</label>
                   <input type="text" className="admin-input" value={project.link} onChange={(e) => handleFieldChange(idx, 'link', e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>GITHUB LINK</label>
+                  <input type="text" className="admin-input" value={project.githubLink || ''} onChange={(e) => handleFieldChange(idx, 'githubLink', e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>VIDEO URL</label>
+                  <input type="text" className="admin-input" value={project.videoUrl || ''} onChange={(e) => handleFieldChange(idx, 'videoUrl', e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>PROJECT IMAGE</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="admin-input"
+                    onChange={(e) => handleImageUpload(idx, e.target.files[0])}
+                  />
+                  {project.image && !project.imageFile && (
+                    <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)' }}>
+                      Current: {project.image}
+                    </div>
+                  )}
+                  {project.imageFile && (
+                    <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#00f2ff' }}>
+                      New image selected: {project.imageFile.name}
+                    </div>
+                  )}
+                </div>
+                <div className="form-group">
+                  <label>PRIORITY</label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                    <input type="checkbox" checked={project.priority || false} onChange={(e) => handleFieldChange(idx, 'priority', e.target.checked)} />
+                    <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem' }}>Featured</span>
+                  </label>
+                </div>
+                <div className="form-group">
+                  <label>ARCHIVED</label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                    <input type="checkbox" checked={project.archived || false} onChange={(e) => handleFieldChange(idx, 'archived', e.target.checked)} />
+                    <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem' }}>Hidden from public</span>
+                  </label>
                 </div>
               </div>
               <div className="form-group" style={{ marginTop: '1.5rem' }}>
                 <label>DESCRIPTION</label>
                 <textarea className="admin-input" rows="3" value={project.desc} onChange={(e) => handleFieldChange(idx, 'desc', e.target.value)} />
               </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1.5rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button
+                    className="btn-sm"
+                    onClick={() => handleMoveUp(idx)}
+                    disabled={idx === 0}
+                    style={{ padding: '6px 12px', fontSize: '0.8rem', opacity: idx === 0 ? 0.3 : 1, cursor: idx === 0 ? 'not-allowed' : 'pointer' }}
+                    title="Move Up"
+                  >
+                    ↑ Move Up
+                  </button>
+                  <button
+                    className="btn-sm"
+                    onClick={() => handleMoveDown(idx)}
+                    disabled={idx === projects.length - 1}
+                    style={{ padding: '6px 12px', fontSize: '0.8rem', opacity: idx === projects.length - 1 ? 0.3 : 1, cursor: idx === projects.length - 1 ? 'not-allowed' : 'pointer' }}
+                    title="Move Down"
+                  >
+                    ↓ Move Down
+                  </button>
+                </div>
                 <button className="delete-btn" onClick={() => handleDelete(idx)}>DELETE PROJECT</button>
               </div>
             </div>

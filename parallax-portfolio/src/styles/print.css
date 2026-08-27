@@ -1,0 +1,46 @@
+/* ============================================
+   PRINT STYLES - GLOBAL
+   ============================================ */
+
+@media print {
+  .navbar,
+  .premium-footer,
+  .navbar-mobile,
+  .neural-background,
+  .section-overlay .close-btn {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  * {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666 !important;
+  }
+
+  .section-title {
+    -webkit-text-fill-color: #000 !important;
+    color: #000 !important;
+    background: none !important;
+  }
+
+  .gradient-text {
+    -webkit-text-fill-color: #000 !important;
+    color: #000 !important;
+    background: none !important;
+  }
+
+  @page {
+    margin: 2cm;
+  }
+}

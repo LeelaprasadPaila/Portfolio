@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  getCertificates,
+  getAllCertificates,
   createCertificate,
   updateCertificate,
   deleteCertificate,
@@ -20,6 +20,7 @@ const AdminCertificates = () => {
     issueDate: '',
     key: '',
     priority: false,
+    archived: false,
     image: null,
   });
 
@@ -30,7 +31,7 @@ const AdminCertificates = () => {
   const loadCertificates = async () => {
     try {
       setLoading(true);
-      const data = await getCertificates();
+      const data = await getAllCertificates();
       setCertificates(Array.isArray(data) ? data : []);
     } catch (error) {
       alert('Error loading certificates: ' + error.message);
@@ -52,6 +53,7 @@ const AdminCertificates = () => {
       formDataObj.append('issueDate', formData.issueDate);
       formDataObj.append('key', formData.key);
       formDataObj.append('priority', formData.priority);
+      formDataObj.append('archived', formData.archived);
 
       if (formData.image instanceof File) {
         formDataObj.append('image', formData.image);
@@ -106,6 +108,7 @@ const AdminCertificates = () => {
       { name: 'issueDate', label: 'Issue Date', type: 'date' },
       { name: 'image', label: 'Image', type: 'file', accept: 'image/*' },
       { name: 'priority', label: 'Priority', type: 'checkbox' },
+      { name: 'archived', label: 'Archived (hidden from public)', type: 'checkbox' },
     ];
 
     // Add license key field only for licensed certificates
@@ -140,7 +143,7 @@ const AdminCertificates = () => {
 
       <h2>Certificates List ({certificates.length})</h2>
       <AdminTable
-        columns={['title', 'category', 'priority']}
+        columns={['title', 'category', 'priority', 'archived']}
         data={certificates}
         onEdit={handleEdit}
         onDelete={handleDelete}

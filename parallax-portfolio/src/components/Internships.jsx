@@ -34,22 +34,51 @@ const Internships = ({ isActive, onClose }) => {
         }
     }, [isActive, loadInternships]);
 
+    // Parse date from duration string for sorting
+    const parseStartDate = (duration) => {
+        if (!duration) return new Date(0);
+        const lower = duration.toLowerCase();
+        if (lower === 'ongoing' || lower === 'present') return new Date(9999, 11, 31);
+        const parts = duration.split(/[-–—to]+/).map(s => s.trim());
+        const startStr = parts[0];
+        if (!startStr) return new Date(0);
+        const months = {
+            jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+            jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
+        };
+        const match = startStr.match(/([a-zA-Z]+)\s+(\d{4})/);
+        if (match) {
+            const month = months[match[1].toLowerCase().slice(0, 3)];
+            const year = parseInt(match[2]);
+            if (month !== undefined && !isNaN(year)) {
+                return new Date(year, month, 1);
+            }
+        }
+        const yearMatch = startStr.match(/(\d{4})/);
+        if (yearMatch) {
+            return new Date(parseInt(yearMatch[1]), 0, 1);
+        }
+        return new Date(0);
+    };
+
     const filteredExp = allExp
         .filter(item => {
             if (filter === 'All') return true;
             return item.type === filter;
         })
         .sort((a, b) => {
-            // Sort: Experience > Internship (Experience shown prominently)
-            const order = { 'Experience': 1, 'Internship': 2 };
-            const typeA = order[a.type] || 99;
-            const typeB = order[b.type] || 99;
-            if (typeA !== typeB) return typeA - typeB;
-            
-            // Then by priority (robust check for boolean or string)
-            const prioA = (a.priority === true || a.priority === 'true') ? 1 : 0;
-            const prioB = (b.priority === true || b.priority === 'true') ? 1 : 0;
-            return prioB - prioA;
+            // First: check if custom sortOrder has been applied (any item has sortOrder > 0)
+            const hasCustomOrder = allExp.some(item => item.sortOrder && item.sortOrder > 0);
+            if (hasCustomOrder) {
+                return (a.sortOrder || 999) - (b.sortOrder || 999);
+            }
+            // Auto-sort by duration date (most recent first), items without dates at bottom
+            const dateA = parseStartDate(a.duration);
+            const dateB = parseStartDate(b.duration);
+            if (!dateA && !dateB) return 0;
+            if (!dateA) return 1;  // a goes to bottom
+            if (!dateB) return -1; // b goes to bottom
+            return dateB - dateA;  // most recent first
         });
 
     return (

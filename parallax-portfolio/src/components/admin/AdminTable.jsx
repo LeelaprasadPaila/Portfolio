@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../styles/admin/AdminTable.css';
 
-const AdminTable = ({ columns, data, onEdit, onDelete }) => {
+const AdminTable = ({ columns, data, onEdit, onDelete, extraActions }) => {
   if (!data || data.length === 0) {
     return <div className="no-data">No data available</div>;
   }
@@ -20,8 +20,8 @@ const AdminTable = ({ columns, data, onEdit, onDelete }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item) => (
-            <tr key={item._id}>
+          {data.map((item, index) => (
+            <tr key={item._id || index}>
               {columns.map((col) => {
                 let value = item[col];
                 if (typeof value === 'boolean') {
@@ -34,6 +34,7 @@ const AdminTable = ({ columns, data, onEdit, onDelete }) => {
                 return <td key={col}>{value || '-'}</td>;
               })}
               <td className="table-actions">
+                {extraActions && extraActions(item, index)}
                 <button className="edit-btn" onClick={() => onEdit(item)}>
                   Edit
                 </button>

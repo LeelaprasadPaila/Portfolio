@@ -13,5 +13,7 @@ dist/
 build/
 **/build/
 *.log
+.vite/
+.ollama_copilot_log.jsonl
 backend/uploads/*
 !backend/uploads/.gitkeep

@@ -8,7 +8,7 @@ export const getCertificates = async (req, res) => {
     const limit = parseInt(req.query.limit) || 0;
     const skip = limit > 0 ? (page - 1) * limit : 0;
 
-    const query = Certificate.find().lean().sort({ priority: -1, createdAt: -1 });
+    const query = Certificate.find({ archived: { $ne: true } }).lean().sort({ priority: -1, createdAt: -1 });
     if (limit > 0) {
       query.skip(skip).limit(limit);
     }
@@ -16,7 +16,7 @@ export const getCertificates = async (req, res) => {
     const certificates = await query;
 
     if (limit > 0) {
-      const total = await Certificate.countDocuments();
+      const total = await Certificate.countDocuments({ archived: { $ne: true } });
       return res.json({ certificates, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
     }
 
@@ -26,9 +26,18 @@ export const getCertificates = async (req, res) => {
   }
 };
 
+export const getAllCertificates = async (req, res) => {
+  try {
+    const certificates = await Certificate.find().lean().sort({ priority: -1, createdAt: -1 });
+    res.json(certificates);
+  } catch (error) {
+    res.status(500).json({ message: error.message, error: true });
+  }
+};
+
 export const createCertificate = async (req, res) => {
   try {
-    const { title, category, description, issuer, issueDate, expiryDate, certLink, priority, key } = req.body;
+    const { title, category, description, issuer, issueDate, expiryDate, certLink, priority, archived, key } = req.body;
 
     if (!title || !category) {
       return res.status(400).json({ message: 'Title and category are required', error: true });
@@ -43,6 +52,7 @@ export const createCertificate = async (req, res) => {
       expiryDate,
       certLink,
       priority: priority === 'true' || priority === true,
+      archived: archived === 'true' || archived === true,
       key,
     };
 
@@ -66,7 +76,7 @@ export const updateCertificate = async (req, res) => {
       return res.status(404).json({ message: 'Certificate not found', error: true });
     }
 
-    const { title, category, description, issuer, issueDate, expiryDate, certLink, priority, key } = req.body;
+    const { title, category, description, issuer, issueDate, expiryDate, certLink, priority, archived, key } = req.body;
 
     certificate.title = title || certificate.title;
     certificate.category = category || certificate.category;
@@ -76,6 +86,7 @@ export const updateCertificate = async (req, res) => {
     certificate.expiryDate = expiryDate || certificate.expiryDate;
     certificate.certLink = certLink || certificate.certLink;
     certificate.priority = priority !== undefined ? (priority === 'true' || priority === true) : certificate.priority;
+    certificate.archived = archived !== undefined ? (archived === 'true' || archived === true) : certificate.archived;
     certificate.key = key !== undefined ? key : certificate.key;
 
     if (req.file) {
@@ -116,4 +127,4 @@ export const deleteCertificate = async (req, res) => {
   }
 };
 
-export default { getCertificates, createCertificate, updateCertificate, deleteCertificate };
+export default { getCertificates, getAllCertificates, createCertificate, updateCertificate, deleteCertificate };

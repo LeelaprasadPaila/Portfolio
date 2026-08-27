@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import BioEditor from './editors/BioEditor';
 import ProjectsEditor from './editors/ProjectsEditor';
-// We'll add the rest later, but patterns remain the same
+import SkillsEditor from './editors/SkillsEditor';
+import CertificatesEditor from './editors/CertificatesEditor';
+import InternshipsEditor from './editors/InternshipsEditor';
+import TechSkillsEditor from './editors/TechSkillsEditor';
+import TestimonialsEditor from './editors/TestimonialsEditor';
+import StatsEditor from './editors/StatsEditor';
 
 /**
  * AdminContainer
  * Main dashboard shell for the administrator command center.
+ * All data is fetched from and synced to MongoDB via the API layer.
  */
 const AdminContainer = ({ adminData, onLogout }) => {
   const [activeTab, setActiveTab] = useState('bio');
@@ -28,13 +34,24 @@ const AdminContainer = ({ adminData, onLogout }) => {
         return <BioEditor bio={bio} onUpdate={handleUpdate} loading={loading} />;
       case 'projects':
         return <ProjectsEditor projects={projects} onUpdate={handleUpdate} loading={loading} />;
-      // Placeholder for other editors until created
+      case 'skills':
+        return <SkillsEditor skills={skills} onUpdate={handleUpdate} loading={loading} />;
+      case 'certs':
+        return <CertificatesEditor certs={certs} onUpdate={handleUpdate} loading={loading} />;
+      case 'internships':
+        return <InternshipsEditor internships={internships} onUpdate={handleUpdate} loading={loading} />;
+      case 'tech':
+        return <TechSkillsEditor techSkills={techSkills} onUpdate={handleUpdate} loading={loading} />;
+      case 'testimonials':
+        return <TestimonialsEditor testimonials={testimonials} onUpdate={handleUpdate} loading={loading} />;
+      case 'stats':
+        return <StatsEditor stats={stats} />;
       default:
         return (
           <div className="admin-section-card" style={{ textAlign: 'center', opacity: 0.5 }}>
             <i className={`fas ${tabs.find(t => t.id === activeTab).icon} fa-4x`} style={{ marginBottom: '2rem' }}></i>
             <h2>{tabs.find(t => t.id === activeTab).label} EDITOR</h2>
-            <p>Component fragmentation in progress...</p>
+            <p>Component ready for data from database.</p>
           </div>
         );
     }
@@ -69,7 +86,7 @@ const AdminContainer = ({ adminData, onLogout }) => {
           <div className="dashboard-header">
             <div>
               <h1 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--primary-color)' }}>{tabs.find(t => t.id === activeTab).label}</h1>
-              <p style={{ color: 'rgba(255,255,255,0.3)', marginTop: '0.5rem', fontSize: '0.9rem' }}>Real-time modifications enabled for active environment.</p>
+              <p style={{ color: 'rgba(255,255,255,0.3)', marginTop: '0.5rem', fontSize: '0.9rem' }}>MongoDB-backed real-time modifications.</p>
             </div>
           </div>
           {renderActiveEditor()}

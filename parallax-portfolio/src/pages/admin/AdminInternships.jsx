@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-  getInternships,
+  getAllInternships,
   createInternship,
   updateInternship,
   deleteInternship,
+  reorderInternships,
 } from '../../services/api';
 import AdminForm from '../../components/admin/AdminForm';
 import AdminTable from '../../components/admin/AdminTable';
@@ -20,6 +21,7 @@ const AdminInternships = () => {
     desc: '',
     link: '',
     priority: false,
+    archived: false,
     image: null,
   });
 
@@ -30,7 +32,7 @@ const AdminInternships = () => {
   const loadInternships = async () => {
     try {
       setLoading(true);
-      const data = await getInternships();
+      const data = await getAllInternships();
       setInternships(Array.isArray(data) ? data : []);
     } catch (error) {
       alert('Error loading internships: ' + error.message);
@@ -52,6 +54,7 @@ const AdminInternships = () => {
       formDataObj.append('desc', formData.desc);
       formDataObj.append('link', formData.link);
       formDataObj.append('priority', formData.priority);
+      formDataObj.append('archived', formData.archived);
 
       if (formData.image instanceof File) {
         formDataObj.append('image', formData.image);
@@ -98,6 +101,7 @@ const AdminInternships = () => {
       desc: '',
       link: '',
       priority: false,
+      archived: false,
       image: null,
     });
     setEditingId(null);
@@ -118,6 +122,7 @@ const AdminInternships = () => {
           { name: 'link', label: 'Link', type: 'url' },
           { name: 'image', label: 'Image', type: 'file', accept: 'image/*' },
           { name: 'priority', label: 'Priority', type: 'checkbox' },
+          { name: 'archived', label: 'Archived (hidden from public)', type: 'checkbox' },
         ]}
         formData={formData}
         setFormData={setFormData}
@@ -127,12 +132,59 @@ const AdminInternships = () => {
         submitText={editingId ? 'Update' : 'Add'}
       />
 
-      <h2>Internships List ({internships.length})</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem' }}>
+        <h2>Internships List ({internships.length})</h2>
+        <button
+          className="add-btn"
+          onClick={async () => {
+            const orderedIds = internships.map(i => i._id);
+            await reorderInternships(orderedIds);
+            loadInternships();
+          }}
+          style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+        >
+          <i className="fas fa-sort"></i> Save Current Order
+        </button>
+      </div>
       <AdminTable
-        columns={['type', 'company', 'role', 'priority']}
+        columns={['type', 'company', 'role', 'priority', 'archived']}
         data={internships}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        extraActions={(item, index) => (
+          <div style={{ display: 'inline-flex', gap: '4px', marginLeft: '8px' }}>
+            <button
+              className="btn-sm"
+              onClick={async (e) => {
+                e.stopPropagation();
+                if (index === 0) return;
+                const arr = [...internships];
+                [arr[index - 1], arr[index]] = [arr[index], arr[index - 1]];
+                setInternships(arr);
+              }}
+              title="Move Up"
+              style={{ padding: '2px 8px', fontSize: '0.75rem', opacity: index === 0 ? 0.3 : 1 }}
+              disabled={index === 0}
+            >
+              ↑
+            </button>
+            <button
+              className="btn-sm"
+              onClick={async (e) => {
+                e.stopPropagation();
+                if (index === internships.length - 1) return;
+                const arr = [...internships];
+                [arr[index], arr[index + 1]] = [arr[index + 1], arr[index]];
+                setInternships(arr);
+              }}
+              title="Move Down"
+              style={{ padding: '2px 8px', fontSize: '0.75rem', opacity: index === internships.length - 1 ? 0.3 : 1 }}
+              disabled={index === internships.length - 1}
+            >
+              ↓
+            </button>
+          </div>
+        )}
       />
     </div>
   );

@@ -1,214 +1,128 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import gsap from 'gsap';
+import React, { useState, useEffect } from 'react';
 import '../styles/Navbar.css';
 
 const Navbar = ({ activeSection, onNavClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const moreRef = useRef(null);
-  const megaMenuRef = useRef(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const mainSections = [
+  const navItems = [
     { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About' },
+    { id: 'projects', label: 'Projects' },
     { id: 'experience', label: 'Experience' },
-    { id: 'certificates', label: 'Certificates' },
+    { id: 'resume', label: 'Resume' },
+    { id: 'certificates', label: 'Certifications' },
+    { id: 'research', label: 'Research' },
+    { id: 'about', label: 'About' },
+    { id: 'contact', label: 'Contact' },
   ];
 
-  const handleToggle = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const handleMoreToggle = (e) => {
-    e.preventDefault();
-    setIsMoreOpen(!isMoreOpen);
-  };
-
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (moreRef.current && !moreRef.current.contains(event.target)) {
-        setIsMoreOpen(false);
-      }
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useLayoutEffect(() => {
-    if (megaMenuRef.current) {
-      if (isMoreOpen) {
-        gsap.fromTo(
-          megaMenuRef.current,
-          { opacity: 0, y: 15, scale: 0.95 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'power3.out' }
-        );
-      } else {
-        gsap.to(megaMenuRef.current, {
-          opacity: 0,
-          y: 10,
-          scale: 0.98,
-          duration: 0.3,
-          ease: 'power2.in',
-        });
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && isMenuOpen) {
+        setIsMenuOpen(false);
       }
-    }
-  }, [isMoreOpen]);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
+  const handleNavClick = (id) => {
+    setIsMenuOpen(false);
+    onNavClick(id);
+  };
 
   return (
-    <>
-      <div className="nav-trigger"></div>
-      <header className={`navbar-wrapper ${isMenuOpen ? 'mobile-active' : ''}`}>
-        <div className="navbar-content">
-          <div className="navbar-logo" onClick={() => onNavClick('home')}>
-            <div className="logo-symbol">ML Graduate</div>
-          </div>
+    <header className={`navbar ${isScrolled ? 'navbar-scrolled' : ''} ${isMenuOpen ? 'navbar-mobile-open' : ''}`}>
+      <div className="navbar-inner">
+        {/* Logo */}
+        <button className="navbar-logo" onClick={() => handleNavClick('home')}>
+          <span className="navbar-logo-text">P</span>
+          <span className="navbar-logo-full">Leela Prasad</span>
+        </button>
 
-          <div className="nav-pill">
-            <ul className="navbar-menu">
-              {mainSections.map((section) => (
-                <li key={section.id} className="nav-item">
-                  {activeSection === section.id && <div className="active-cap"></div>}
-                  <a
-                    href={`#${section.id}`}
-                    className={`nav-link ${activeSection === section.id ? 'active' : ''}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsMenuOpen(false);
-                      setIsMoreOpen(false);
-                      onNavClick(section.id);
-                    }}
-                  >
-                    {section.label}
-                  </a>
-                </li>
-              ))}
+        {/* Desktop Navigation */}
+        <nav className="navbar-nav">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              className={`navbar-link ${activeSection === item.id ? 'navbar-link-active' : ''}`}
+              onClick={() => handleNavClick(item.id)}
+            >
+              {item.label}
+              {activeSection === item.id && <span className="navbar-link-indicator" />}
+            </button>
+          ))}
+        </nav>
 
-              <li className="nav-item more-dropdown" ref={moreRef}>
-                <a
-                  href="#more"
-                  className={`nav-link ${isMoreOpen ? 'active' : ''}`}
-                  onClick={handleMoreToggle}
-                >
-                  More{' '}
-                  <span className={`chevron ${isMoreOpen ? 'open' : ''}`}>
-                    {isMoreOpen ? '▴' : '▾'}
-                  </span>
-                </a>
+        {/* Right Actions */}
+        <div className="navbar-actions">
+<button
+            className="navbar-action-btn"
+            onClick={() => window.dispatchEvent(new CustomEvent('openGlobalSearch'))}
+            aria-label="Open search"
+            title="Search (Cmd+K)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </button>
 
-                {isMoreOpen && (
-                  <div className="mega-menu" ref={megaMenuRef}>
-                    <div className="mega-menu-container">
-                      <div className="mega-featured">
-                        <div
-                          className="mega-card featured-primary"
-                          onClick={() => {
-                            // Sample button 1 - you can update this
-                            window.open('https://github.com/LeelaprasadPaila', '_blank');
-                            setIsMoreOpen(false);
-                          }}
-                        >
-                          <div className="mega-card-img" style={{background: 'linear-gradient(145deg, #667eea, #764ba2)'}}></div>
-                          <div className="mega-card-overlay"></div>
-                          <div className="mega-card-content">
-                            <div className="card-badge">🚀</div>
-                            <h3>Sample Feature 1</h3>
-                            <p>Update this button with your content</p>
-                          </div>
-                        </div>
-                        <div
-                          className="mega-card featured-primary"
-                          onClick={() => {
-                            // Sample button 2 - you can update this
-                            window.open('https://linkedin.com/in/leelaprasadpaila', '_blank');
-                            setIsMoreOpen(false);
-                          }}
-                        >
-                          <div className="mega-card-img" style={{background: 'linear-gradient(145deg, #f093fb, #f5576c)'}}></div>
-                          <div className="mega-card-overlay"></div>
-                          <div className="mega-card-content">
-                            <div className="card-badge">💼</div>
-                            <h3>Sample Feature 2</h3>
-                            <p>Update this button with your content</p>
-                          </div>
-                        </div>
-                      </div>
+          <button
+            className="navbar-cta"
+            onClick={() => handleNavClick('contact')}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+            <span>Get in Touch</span>
+          </button>
 
-                      <div className="mega-links">
-                        <div
-                          className="mega-link-item"
-                          onClick={() => {
-                            onNavClick('projects');
-                            setIsMoreOpen(false);
-                          }}
-                        >
-                          <div className="mega-icon">💻</div>
-                          <div className="mega-info">
-                            <h4>Projects</h4>
-                            <span>Check my portfolio work</span>
-                          </div>
-                        </div>
-                        <div
-                          className="mega-link-item"
-                          onClick={() => {
-                            onNavClick('contact');
-                            setIsMoreOpen(false);
-                          }}
-                        >
-                          <div className="mega-icon">✉️</div>
-                          <div className="mega-info">
-                            <h4>Contact</h4>
-                            <span>Get in touch for collaborations</span>
-                          </div>
-                        </div>
-                        <div
-                          className="mega-link-item"
-                          onClick={() => {
-                            window.open('https://github.com/LeelaprasadPaila', '_blank');
-                            setIsMoreOpen(false);
-                          }}
-                        >
-                          
-                          <div className="mega-info">
-                            <h4>Github</h4>
-                            <span>Check out my open source work</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </li>
-            </ul>
-
-            <div className="nav-action-buttons">
-              <button
-                className="book-call-btn"
-                onClick={() => window.open('https://wa.me/9700651322?text=Hi%20Leela%20Prasad,%20I%20would%20like%20to%20book%20a%20call%20with%20you.', '_blank')}
-              >
-                <i className="fab fa-whatsapp"></i> Book a Call
-              </button>
-              <button
-                className="hire-me-btn"
-                onClick={() => onNavClick('contact')}
-              >
-                <i className="fas fa-user-tie"></i> Hire Me
-              </button>
-            </div>
-          </div>
-
-          <div className="navbar-utility">
-            <div className="portfolio-icon" onClick={() => window.open('#projects', '_self')}>🔗</div>
-            <div className="navbar-hamburger" onClick={handleToggle}>
-              <div className="hamburger-bars">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-          </div>
+          {/* Mobile Hamburger */}
+          <button
+            className={`navbar-hamburger ${isMenuOpen ? 'hamburger-active' : ''}`}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
-      </header>
-    </>
+      </div>
+
+      {/* Mobile Menu */}
+      <div className={`navbar-mobile ${isMenuOpen ? 'navbar-mobile-visible' : ''}`}>
+        <nav className="navbar-mobile-nav">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              className={`navbar-mobile-link ${activeSection === item.id ? 'navbar-mobile-link-active' : ''}`}
+              onClick={() => handleNavClick(item.id)}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </header>
   );
 };
 
