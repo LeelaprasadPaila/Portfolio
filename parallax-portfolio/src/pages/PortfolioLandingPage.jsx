@@ -14,6 +14,7 @@ const navigation = [
 
 const PortfolioLandingPage = () => {
     const navigate = useNavigate();
+    const openPortfolio = () => window.location.assign('/portfolio/');
 
     return (
         <div className="portfolio-landing">
@@ -36,7 +37,7 @@ const PortfolioLandingPage = () => {
                         <button
                             className={`portfolio-nav-link ${index === 0 ? 'is-active' : ''}`}
                             key={item.path}
-                            onClick={() => navigate(item.path)}
+                            onClick={() => item.path === '/portfolio/' ? openPortfolio() : navigate(item.path)}
                         >
                             <span className="portfolio-nav-index">0{index + 1}</span>
                             {item.label}
@@ -64,7 +65,7 @@ const PortfolioLandingPage = () => {
                             AI-native systems, clear interfaces, and reliable backend architecture for people solving meaningful problems.
                         </p>
                         <div className="portfolio-hero-actions">
-                            <button className="portfolio-primary-action" onClick={() => navigate('/portfolio/')}>
+                            <button className="portfolio-primary-action" onClick={openPortfolio}>
                                 Open full portfolio <span aria-hidden="true">↗</span>
                             </button>
                             <button className="portfolio-text-action" onClick={() => navigate('/projects')}>
