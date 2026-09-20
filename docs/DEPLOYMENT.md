@@ -215,9 +215,9 @@ netlify deploy --prod --dir=dist
 
 ### GitHub Pages
 
-The frontend is configured for the project URL `https://<github-user>.github.io/portfolio/`.
-React Router and public assets use the `/portfolio/` base path, including nested pages such as
-`/portfolio/admin` and `/portfolio/projects`.
+The frontend is configured for the custom GitHub Pages domain root, for example
+`https://www.pailaleelaprasad.in/`. React Router and public assets use `/` as the base path,
+including nested pages such as `/admin` and `/projects`.
 
 Before enabling the Pages workflow, add these repository **Variables** under
 `Settings > Secrets and variables > Actions > Variables`:
