@@ -4,6 +4,7 @@ import { assetUrl } from '../config/env';
 
 const navigation = [
     { label: 'Home', path: '/' },
+    { label: 'Portfolio', path: '/portfolio/' },
     { label: 'About', path: '/about' },
     { label: 'Projects', path: '/projects' },
     { label: 'Experience', path: '/experience' },
@@ -63,11 +64,11 @@ const PortfolioLandingPage = () => {
                             AI-native systems, clear interfaces, and reliable backend architecture for people solving meaningful problems.
                         </p>
                         <div className="portfolio-hero-actions">
-                            <button className="portfolio-primary-action" onClick={() => navigate('/projects')}>
-                                View selected work <span aria-hidden="true">↗</span>
+                            <button className="portfolio-primary-action" onClick={() => navigate('/portfolio/')}>
+                                Open full portfolio <span aria-hidden="true">↗</span>
                             </button>
-                            <button className="portfolio-text-action" onClick={() => navigate('/about')}>
-                                More about me <span aria-hidden="true">→</span>
+                            <button className="portfolio-text-action" onClick={() => navigate('/projects')}>
+                                View selected work <span aria-hidden="true">→</span>
                             </button>
                         </div>
                     </div>

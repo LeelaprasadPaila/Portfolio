@@ -1,5 +1,5 @@
 // Service Worker for PWA support
-const CACHE_NAME = 'portfolio-v2';
+const CACHE_NAME = 'portfolio-v3';
 const BASE_PATH = new URL(self.registration.scope).pathname;
 const STATIC_ASSETS = [
     BASE_PATH,
