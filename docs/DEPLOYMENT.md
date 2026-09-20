@@ -215,9 +215,9 @@ netlify deploy --prod --dir=dist
 
 ### GitHub Pages
 
-The frontend is configured for the custom GitHub Pages domain root, for example
-`https://www.pailaleelaprasad.in/`. React Router and public assets use `/` as the base path,
-including nested pages such as `/admin` and `/projects`.
+The frontend is configured for the custom GitHub Pages subpath
+`https://www.pailaleelaprasad.in/portfolio/`. React Router and public assets use `/portfolio/`
+as the base path, including nested pages such as `/portfolio/admin` and `/portfolio/projects`.
 
 Before enabling the Pages workflow, add these repository **Variables** under
 `Settings > Secrets and variables > Actions > Variables`:
@@ -230,8 +230,8 @@ VITE_STORAGE_URL=https://your-backend-domain.com/uploads
 The backend is deployed separately. Set `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `ADMIN_EMAIL`,
 `MONGODB_URI`, and `JWT_SECRET` in the backend host's environment settings; never commit them.
 
-The workflow creates `404.html` from the built application so direct visits to nested routes
-continue to load through GitHub Pages.
+The workflow packages the build inside a `portfolio/` directory and creates `404.html` there so
+the application is served from `/portfolio/` and direct visits to nested routes continue to load.
 
 ```bash
 # Manual build, if needed
