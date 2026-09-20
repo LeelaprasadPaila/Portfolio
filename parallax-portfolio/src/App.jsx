@@ -111,15 +111,15 @@ function App() {
             <Routes>
                 {isPortfolioBuild ? (
                     <Route element={<Layout />}>
-                        <Route path="/" element={<HomePage />} />
+                        <Route path="/" element={<PortfolioLandingPage />} />
                     </Route>
                 ) : (
-                    <Route path="/" element={<PortfolioLandingPage />} />
+                    <Route element={<Layout />}>
+                        <Route path="/" element={<HomePage />} />
+                    </Route>
                 )}
                 {!isPortfolioBuild && import.meta.env.DEV && (
-                    <Route path="/portfolio" element={<Layout />}>
-                        <Route index element={<HomePage />} />
-                    </Route>
+                    <Route path="/portfolio" element={<PortfolioLandingPage />} />
                 )}
                 <Route element={<Layout />}>
                     <Route path="/about" element={<AboutPage />} />
