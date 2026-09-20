@@ -116,6 +116,11 @@ function App() {
                 ) : (
                     <Route path="/" element={<PortfolioLandingPage />} />
                 )}
+                {!isPortfolioBuild && import.meta.env.DEV && (
+                    <Route path="/portfolio" element={<Layout />}>
+                        <Route index element={<HomePage />} />
+                    </Route>
+                )}
                 <Route element={<Layout />}>
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/projects" element={<ProjectsPage />} />
