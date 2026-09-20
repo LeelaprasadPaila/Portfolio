@@ -16,6 +16,7 @@ const Navbar = ({ activeSection, onNavClick }) => {
     { id: 'about', label: 'About' },
     { id: 'contact', label: 'Contact' },
   ];
+  const portfolioPath = import.meta.env.VITE_PORTFOLIO_MODE === 'true' ? '/' : '/portfolio/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,7 +67,7 @@ const Navbar = ({ activeSection, onNavClick }) => {
         <nav className="navbar-nav">
           {navItems.map((item) => (
             item.external ? (
-              <a key={item.id} className="navbar-link" href="/portfolio/" onClick={handlePortfolioClick}>
+              <a key={item.id} className="navbar-link" href={portfolioPath} onClick={handlePortfolioClick}>
                 {item.label}
               </a>
             ) : (
@@ -125,7 +126,7 @@ const Navbar = ({ activeSection, onNavClick }) => {
         <nav className="navbar-mobile-nav">
           {navItems.map((item) => (
             item.external ? (
-              <a key={item.id} className="navbar-mobile-link" href="/portfolio/" onClick={handlePortfolioClick}>
+              <a key={item.id} className="navbar-mobile-link" href={portfolioPath} onClick={handlePortfolioClick}>
                 {item.label}
               </a>
             ) : (

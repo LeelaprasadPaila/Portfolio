@@ -110,11 +110,11 @@ function App() {
             <SEO />
             <Routes>
                 {isPortfolioBuild ? (
-                    <Route path="/" element={<PortfolioLandingPage />} />
-                ) : (
                     <Route element={<Layout />}>
                         <Route path="/" element={<HomePage />} />
                     </Route>
+                ) : (
+                    <Route path="/" element={<PortfolioLandingPage />} />
                 )}
                 <Route element={<Layout />}>
                     <Route path="/about" element={<AboutPage />} />
