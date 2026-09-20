@@ -32,18 +32,30 @@ jobs:
         run: npm ci
         working-directory: parallax-portfolio
 
-      - name: Build portfolio
+      - name: Build normal homepage
         run: npm run build
         working-directory: parallax-portfolio
         env:
+          VITE_PORTFOLIO_MODE: 'false'
           VITE_API_URL: ${{ vars.VITE_API_URL }}
           VITE_STORAGE_URL: ${{ vars.VITE_STORAGE_URL }}
 
-      - name: Prepare root application
+      - name: Build Parallax Portfolio
+        run: npm run build
+        working-directory: parallax-portfolio
+        env:
+          VITE_PORTFOLIO_MODE: 'true'
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_STORAGE_URL: ${{ vars.VITE_STORAGE_URL }}
+
+      - name: Prepare root and portfolio applications
         run: |
-          mkdir -p pages
-          cp -R parallax-portfolio/dist/. pages/
+          rm -rf pages
+          mkdir -p pages/portfolio
+          cp -R parallax-portfolio/dist-main/. pages/
+          cp -R parallax-portfolio/dist-portfolio/. pages/portfolio/
           cp pages/index.html pages/404.html
+          cp pages/portfolio/index.html pages/portfolio/404.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

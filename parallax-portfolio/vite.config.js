@@ -4,8 +4,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vite.dev/config/
 export default defineConfig({
-    // GitHub Pages serves this repository from /portfolio/.
-    base: '/portfolio/',
+    base: process.env.VITE_PORTFOLIO_MODE === 'true' ? '/portfolio/' : '/',
     plugins: [
         react()
     ],
@@ -26,6 +25,7 @@ export default defineConfig({
         }
     },
     build: {
+        outDir: process.env.VITE_PORTFOLIO_MODE === 'true' ? 'dist-portfolio' : 'dist-main',
         target: 'es2020',
         minify: 'terser',
         terserOptions: {

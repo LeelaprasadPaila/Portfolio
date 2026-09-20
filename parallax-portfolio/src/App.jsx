@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Layout from './pages/Layout';
+import HomePage from './pages/HomePage';
 import PortfolioLandingPage from './pages/PortfolioLandingPage';
 import AboutPage from './pages/AboutPage';
 import ProjectsPage from './pages/ProjectsPage';
@@ -29,6 +30,7 @@ import { prefersReducedMotion } from './utils/accessibility';
 import './index.css';
 
 function App() {
+    const isPortfolioBuild = import.meta.env.VITE_PORTFOLIO_MODE === 'true';
     const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
     const [projects, setProjects] = useState([]);
     const toast = useToast();
@@ -107,7 +109,13 @@ function App() {
         <ErrorBoundary>
             <SEO />
             <Routes>
-                <Route path="/" element={<PortfolioLandingPage />} />
+                {isPortfolioBuild ? (
+                    <Route path="/" element={<PortfolioLandingPage />} />
+                ) : (
+                    <Route element={<Layout />}>
+                        <Route path="/" element={<HomePage />} />
+                    </Route>
+                )}
                 <Route element={<Layout />}>
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/projects" element={<ProjectsPage />} />
