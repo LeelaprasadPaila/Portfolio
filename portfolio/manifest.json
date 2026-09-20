@@ -1,0 +1,36 @@
+{
+    "name": "Paila Leela Prasad - AI Architect Portfolio",
+    "short_name": "Leela Prasad",
+    "description": "AI & Machine Learning specialist portfolio showcasing projects, certifications, and expertise.",
+    "start_url": "/portfolio/",
+    "display": "standalone",
+    "background_color": "#0a0a1a",
+    "theme_color": "#00f2ff",
+    "orientation": "portrait-primary",
+    "scope": "/portfolio/",
+    "lang": "en-US",
+    "dir": "ltr",
+    "icons": [
+        {
+            "src": "favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["portfolio", "technology", "productivity"],
+    "screenshots": [],
+    "prefer_related_applications": false
+}
