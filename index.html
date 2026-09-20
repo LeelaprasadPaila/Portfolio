@@ -1,194 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark-theme">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Ecosystem | Paila Leela Prasad</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --neon-blue: #00f2ff;
-            --deep-space: #050a0f;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: var(--deep-space);
-            color: white;
-            font-family: 'Inter', sans-serif;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at center, #0a192f 0%, #050a0f 100%);
-        }
-
-        .portal-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 3rem;
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
-            animation: fadeIn 1s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            letter-spacing: 4px;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(90deg, #fff, var(--neon-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        p {
-            color: rgba(255,255,255,0.6);
-            line-height: 1.6;
-            margin-bottom: 2.5rem;
-            font-weight: 300;
-        }
-
-        .links-grid {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .launcher-btn {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1.25rem 2rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .launcher-btn:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: var(--neon-blue);
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.15);
-        }
-
-        .launcher-btn i {
-            color: var(--neon-blue);
-            font-size: 1.2rem;
-        }
-
-        .btn-content {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            text-align: left;
-        }
-
-        .btn-title {
-            display: block;
-            font-weight: 600;
-            font-size: 1rem;
-        }
-
-        .btn-desc {
-            display: block;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.4);
-            margin-top: 2px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--neon-blue);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--neon-blue);
-        }
-
-        .footer {
-            margin-top: 3rem;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.2);
-            letter-spacing: 2px;
-        }
-    </style>
-</head>
-<body>
-    <div id="bg-canvas"></div>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     
-    <div class="portal-container">
-        <h1>PORTFOLIO SYSTEM</h1>
-        <p>Dynamic deployment architecture with MongoDB backend and parallax frontend engine.</p>
-        
-        <div class="links-grid">
-            <a href="/parallax-portfolio" class="launcher-btn">
-                <div class="btn-content">
-                    <i class="fas fa-rocket"></i>
-                    <div>
-                        <span class="btn-title">Frontend Engine</span>
-                        <span class="btn-desc">Interactive portfolio UI (Redirect)</span>
-                    </div>
-                </div>
-                <div class="status-dot"></div>
-            </a>
+    <!-- Primary Meta Tags -->
+    <title>Paila Leela Prasad - AI Architect & Full-Stack Engineer Portfolio</title>
+    <meta name="title" content="Paila Leela Prasad - AI Architect & Full-Stack Engineer Portfolio">
+    <meta name="description" content="AI & Machine Learning specialist portfolio showcasing 50+ projects, certifications, and expertise in artificial intelligence, deep learning, and full-stack engineering.">
+    <meta name="keywords" content="AI, Machine Learning, Portfolio, Deep Learning, Neural Networks, TensorFlow, Python, Full-Stack, React, Node.js">
+    <meta name="author" content="Paila Leela Prasad">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    <meta name="theme-color" content="#00f2ff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0a0a1a" media="(prefers-color-scheme: dark)">
+    <meta name="color-scheme" content="dark light">
 
-            <a href="https://portfolio-backend-jndb.onrender.com/api/projects" class="launcher-btn" target="_blank">
-                <div class="btn-content">
-                    <i class="fas fa-server"></i>
-                    <div>
-                        <span class="btn-title">Core Backend</span>
-                        <span class="btn-desc">Live REST API & MongoDB Service</span>
-                    </div>
-                </div>
-                <i class="fas fa-external-link-alt" style="font-size: 0.8rem; opacity: 0.5;"></i>
-            </a>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://leelaprasad.dev/">
+    <meta property="og:title" content="Paila Leela Prasad - AI Architect & Full-Stack Engineer">
+    <meta property="og:description" content="AI & Machine Learning specialist portfolio showcasing 50+ projects, certifications, and expertise in artificial intelligence.">
+    <meta property="og:image" content="https://leelaprasad.dev/images/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Paila Leela Prasad Portfolio">
 
-            <a href="/parallax-portfolio/src/components/Admin.jsx" class="launcher-btn">
-                <div class="btn-content">
-                    <i class="fas fa-shield-halved"></i>
-                    <div>
-                        <span class="btn-title">Admin Terminal</span>
-                        <span class="btn-desc">Secure dashboard access</span>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right" style="opacity: 0.3;"></i>
-            </a>
-        </div>
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://leelaprasad.dev/">
+    <meta name="twitter:title" content="Paila Leela Prasad - AI Architect & Full-Stack Engineer">
+    <meta name="twitter:description" content="AI & Machine Learning specialist portfolio showcasing 50+ projects, certifications, and expertise in artificial intelligence.">
+    <meta name="twitter:image" content="https://leelaprasad.dev/images/og-image.jpg">
+    <meta name="twitter:creator" content="@leelaprasad">
+    <meta name="twitter:site" content="@leelaprasad">
 
-        <div class="footer">
-            PAILA LEELA PRASAD // SYSTEM VERSION 3.2.0
-        </div>
-    </div>
+    <!-- Preconnect & DNS Prefetch -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Preload Critical Assets -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" as="style">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome (Critical icons inline, full set deferred) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
+    <!-- Favicon / Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Leela Prasad">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://leelaprasad.dev/">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Paila Leela Prasad",
+        "givenName": "Leela Prasad",
+        "familyName": "Paila",
+        "alternateName": "Leela Prasad",
+        "jobTitle": "AI Architect & Full-Stack Engineer",
+        "description": "AI & Machine Learning specialist with expertise in deep learning, neural networks, and full-stack development.",
+        "url": "https://leelaprasad.dev/",
+        "sameAs": [
+            "https://github.com/LeelaprasadPaila",
+            "https://linkedin.com/in/leelaprasadpaila"
+        ],
+        "knowsAbout": ["Artificial Intelligence", "Machine Learning", "Deep Learning", "Full-Stack Development", "React", "Python", "TensorFlow"],
+        "alumniOf": {
+            "@type": "CollegeOrUniversity",
+            "name": "Your University Name"
+        },
+        "image": "https://leelaprasad.dev/images/profile.jpg"
+    }
+    </script>
+
+    <!-- Website Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Paila Leela Prasad Portfolio",
+        "url": "https://leelaprasad.dev/",
+        "description": "AI & Machine Learning specialist portfolio showcasing projects, certifications, and expertise.",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://leelaprasad.dev/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <!-- Breadcrumb Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://leelaprasad.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Projects", "item": "https://leelaprasad.dev/projects" },
+            { "@type": "ListItem", "position": 3, "name": "Experience", "item": "https://leelaprasad.dev/experience" },
+            { "@type": "ListItem", "position": 4, "name": "Resume", "item": "https://leelaprasad.dev/resume" },
+            { "@type": "ListItem", "position": 5, "name": "Contact", "item": "https://leelaprasad.dev/contact" }
+        ]
+    }
+    </script>
+
+    <!-- Performance: Preconnect to analytics -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="preconnect" href="https://plausible.io" crossorigin>
+
+    <!-- Security Headers (meta equivalent) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <script type="module" crossorigin src="/assets/js/index-D_ZTgLMj.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/js/react-vendor-D6lugKia.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/animation-vendor-DdPmJgzX.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/three-vendor-BLy-g0Mh.js">
+  <link rel="stylesheet" crossorigin href="/assets/css/index-B2laBoxy.css">
+</head>
+
+<body>
+    <!-- Root mount; skip link is rendered by React Layout to avoid FOUC -->
+
+    <div id="root"></div>
+    
+    <!-- Scripts -->
+    
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(
+                    (reg) => console.log('SW registered:', reg.scope),
+                    (err) => console.warn('SW registration failed:', err)
+                );
+            });
+        }
+    </script>
 </body>
+
 </html>

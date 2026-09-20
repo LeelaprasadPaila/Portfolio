@@ -39,11 +39,11 @@ jobs:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
           VITE_STORAGE_URL: ${{ vars.VITE_STORAGE_URL }}
 
-      - name: Package application under /portfolio/
+      - name: Prepare root application
         run: |
-          mkdir -p pages/portfolio
-          cp -R parallax-portfolio/dist/. pages/portfolio/
-          cp pages/portfolio/index.html pages/portfolio/404.html
+          mkdir -p pages
+          cp -R parallax-portfolio/dist/. pages/
+          cp pages/index.html pages/404.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
