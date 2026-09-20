@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm, ValidationError } from '@formspree/react';
 import ScrollReveal from '../components/ScrollReveal';
 import '../styles/ContactPage.css';
+import { assetUrl } from '../config/env';
 
 const ContactPage = () => {
   const navigate = useNavigate();
@@ -85,7 +86,7 @@ const ContactPage = () => {
             <ScrollReveal direction="left">
               <div className="contact-intro glass-card">
                 <div className="contact-avatar">
-                  <img src="/images/Portfolio_image.png" alt="Leela Prasad" />
+                  <img src={assetUrl('images/Portfolio_image.png')} alt="Leela Prasad" />
                 </div>
                 <h3>Leela Prasad Paila</h3>
                 <p>AI Native Engineer & Full-Stack Developer</p>

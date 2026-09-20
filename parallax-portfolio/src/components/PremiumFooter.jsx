@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { assetUrl } from '../config/env';
 import '../styles/PremiumFooter.css';
 
 const PremiumFooter = ({ onAdminClick }) => {
@@ -95,7 +96,7 @@ const PremiumFooter = ({ onAdminClick }) => {
                         <h4 className="premium-footer-col-title">Resources</h4>
                         <ul className="premium-footer-links">
                             {[
-                                { label: 'Resume', href: '/resume.pdf', icon: 'download' },
+                                { label: 'Resume', href: assetUrl('resume.pdf'), icon: 'download' },
                                 { label: 'GitHub', href: 'https://github.com/leelaprasadpaila', icon: 'external' },
                                 { label: 'LinkedIn', href: 'https://linkedin.com/in/leelaprasadpaila', icon: 'external' },
                             ].map((link, i) => (

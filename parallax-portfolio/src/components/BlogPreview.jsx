@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { assetUrl } from '../config/env';
 import '../styles/BlogPreview.css';
 
 const blogPosts = [
@@ -8,7 +9,7 @@ const blogPosts = [
         readingTime: '8 min read',
         date: 'Mar 15, 2026',
         summary: 'A deep dive into architecting production-grade machine learning pipelines using FastAPI, Docker, and async processing patterns.',
-        image: '/images/blog/blog-1.jpg',
+        image: assetUrl('images/blog/blog-1.jpg'),
         color: '#00f2ff',
     },
     {
@@ -17,7 +18,7 @@ const blogPosts = [
         readingTime: '12 min read',
         date: 'Feb 28, 2026',
         summary: 'An intuitive explanation of transformer models, attention mechanisms, and how they revolutionized natural language processing.',
-        image: '/images/blog/blog-2.jpg',
+        image: assetUrl('images/blog/blog-2.jpg'),
         color: '#8b5cf6',
     },
     {
@@ -26,7 +27,7 @@ const blogPosts = [
         readingTime: '6 min read',
         date: 'Feb 10, 2026',
         summary: 'Practical strategies for improving Python backend performance including caching, async/await, and database optimization techniques.',
-        image: '/images/blog/blog-3.jpg',
+        image: assetUrl('images/blog/blog-3.jpg'),
         color: '#10b981',
     },
     {
@@ -35,7 +36,7 @@ const blogPosts = [
         readingTime: '10 min read',
         date: 'Jan 25, 2026',
         summary: 'A comprehensive guide to deploying computer vision models in production, covering CNNs, object detection, and real-time inference.',
-        image: '/images/blog/blog-4.jpg',
+        image: assetUrl('images/blog/blog-4.jpg'),
         color: '#ec4899',
     },
 ];

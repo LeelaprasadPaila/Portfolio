@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/FeaturedProjects.css';
+import { assetUrl } from '../config/env';
 
 const featuredProjects = [
     {
@@ -7,7 +8,7 @@ const featuredProjects = [
         description: 'Collaborative filtering model using Matrix Factorization to predict user preferences with high precision across large-scale datasets.',
         problem: 'E-commerce platforms struggle with personalized recommendations at scale, leading to poor user engagement and low conversion rates.',
         tech: ['Python', 'ML', 'Matrix Factorization', 'Pandas'],
-        image: '/images/projects/project-1-thumb.png',
+        image: assetUrl('images/projects/project-1-thumb.png'),
         github: 'https://github.com/LeelaprasadPaila',
         demo: '#',
         color: '#00f2ff',
@@ -17,7 +18,7 @@ const featuredProjects = [
         description: 'CNN-based model to identify manipulated facial features in video content using multi-frame temporal analysis with 94% accuracy.',
         problem: 'Misinformation through deepfake videos is growing exponentially. Manual detection is impossible at scale.',
         tech: ['PyTorch', 'Computer Vision', 'CNN', 'OpenCV'],
-        image: '/images/projects/project-2-thumb.png',
+        image: assetUrl('images/projects/project-2-thumb.png'),
         github: 'https://github.com/LeelaprasadPaila',
         demo: '#',
         color: '#8b5cf6',
@@ -27,7 +28,7 @@ const featuredProjects = [
         description: 'Transformer-based conversational agent with context-aware responses, sentiment analysis, and multi-turn dialogue management.',
         problem: 'Customer support teams spend 70% of time on repetitive queries. An intelligent chatbot reduces response time by 85%.',
         tech: ['TensorFlow', 'NLP', 'Transformers', 'FastAPI'],
-        image: '/images/projects/project-3-thumb.png',
+        image: assetUrl('images/projects/project-3-thumb.png'),
         github: 'https://github.com/LeelaprasadPaila',
         demo: '#',
         color: '#ec4899',
@@ -37,7 +38,7 @@ const featuredProjects = [
         description: 'Dynamic portfolio framework with automated data synchronization, neural background effects, and real-time admin dashboard.',
         problem: 'Static portfolios fail to showcase evolving skills. An AI-powered engine keeps content fresh and engaging automatically.',
         tech: ['React', 'Node.js', 'Three.js', 'MongoDB'],
-        image: '/images/projects/project-1-thumb.png',
+        image: assetUrl('images/projects/project-1-thumb.png'),
         github: 'https://github.com/LeelaprasadPaila',
         demo: '#',
         color: '#10b981',

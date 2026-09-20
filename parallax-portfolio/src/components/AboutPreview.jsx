@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { getData, STORAGE_KEYS } from '../data/dataStore';
+import { assetUrl } from '../config/env';
 import '../styles/AboutPreview.css';
 
 const AboutPreview = ({ onExploreClick }) => {
@@ -34,7 +35,7 @@ const AboutPreview = ({ onExploreClick }) => {
         setInterests(Array.isArray(savedInterests) ? savedInterests : []);
     }, []);
 
-    const profileImage = bioData?.profileImage || '/images/Portfolio_image.png';
+    const profileImage = assetUrl(bioData?.profileImage || 'images/Portfolio_image.png');
     const introText = bioData?.intro || "I'm an AI Engineer and Machine Learning specialist passionate about building intelligent systems that solve real-world problems. With expertise spanning backend engineering, deep learning, and cloud infrastructure, I architect end-to-end solutions that are both innovative and production-ready.";
 
     return (
@@ -173,7 +174,7 @@ const AboutPreview = ({ onExploreClick }) => {
                                 Read More
                             </button>
                             <a
-                                href="/resume.pdf"
+                                href={assetUrl('resume.pdf')}
                                 download
                                 className="about-preview-btn about-preview-btn-secondary"
                             >

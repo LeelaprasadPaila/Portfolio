@@ -1,4 +1,5 @@
 import { certificatesData as initialCerts } from './certificatesData';
+import { assetUrl } from '../config/env';
 
 const STORAGE_KEYS = {
     BIO: 'portfolio_bio_data',
@@ -24,7 +25,7 @@ const initialBio = {
     degree: "B.tech CSE(AI & ML)",
     email: "pailaleelaprasad@gmail.com",
     freelance: "Available",
-    profileImage: "/images/Portfolio_image.png"
+    profileImage: assetUrl('images/Portfolio_image.png')
 };
 
 const initialProjects = [

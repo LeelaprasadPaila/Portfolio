@@ -4,6 +4,8 @@ import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vite.dev/config/
 export default defineConfig({
+    // GitHub Pages serves this project from /portfolio/, rather than the domain root.
+    base: '/portfolio/',
     plugins: [
         react()
     ],

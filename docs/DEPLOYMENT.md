@@ -215,21 +215,27 @@ netlify deploy --prod --dir=dist
 
 ### GitHub Pages
 
+The frontend is configured for the project URL `https://<github-user>.github.io/portfolio/`.
+React Router and public assets use the `/portfolio/` base path, including nested pages such as
+`/portfolio/admin` and `/portfolio/projects`.
+
+Before enabling the Pages workflow, add these repository **Variables** under
+`Settings > Secrets and variables > Actions > Variables`:
+
+```env
+VITE_API_URL=https://your-backend-domain.com/api
+VITE_STORAGE_URL=https://your-backend-domain.com/uploads
+```
+
+The backend is deployed separately. Set `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `ADMIN_EMAIL`,
+`MONGODB_URI`, and `JWT_SECRET` in the backend host's environment settings; never commit them.
+
+The workflow creates `404.html` from the built application so direct visits to nested routes
+continue to load through GitHub Pages.
+
 ```bash
-# Install gh-pages
-npm i -g gh-pages
-
-# Add to package.json scripts:
-# "deploy": "gh-pages -d dist"
-
-# Deploy
-npm run deploy
-
-# Or manually:
+# Manual build, if needed
 npm run build
-git add dist/
-git commit -m "Deploy to GitHub Pages"
-git subtree push --prefix dist origin gh-pages
 ```
 
 ### AWS S3 + CloudFront

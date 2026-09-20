@@ -3,7 +3,7 @@
  * Centralized interface for backend communication with dynamic caching and environment awareness.
  */
 
-import ENV from '../config/env';
+import ENV, { assetUrl } from '../config/env';
 import { STORAGE_KEYS, getData } from '../data/dataStore';
 
 const API_URL = ENV.API_URL;
@@ -87,7 +87,7 @@ export const getFileUrl = (path) => {
   // External URLs or data URIs
   if (path.startsWith('http') || path.startsWith('data:')) return path;
   // Static assets in public folder (e.g., images/...)
-  if (path.startsWith('images/')) return `/${path}`;
+  if (path.startsWith('images/')) return assetUrl(path);
   
   // Uploaded files served from backend uploads directory
   return `${ENV.STORAGE_URL}/${path.split('/').pop()}`;

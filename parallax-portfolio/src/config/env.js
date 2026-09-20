@@ -5,6 +5,10 @@
 
 const isLocalhost = typeof window !== 'undefined' && /localhost|127\.0\.0\.1/.test(window.location.hostname);
 
+// Keeps public-folder assets working both locally and when GitHub Pages serves
+// the app from /portfolio/ instead of the domain root.
+export const assetUrl = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
+
 const ENV = {
   // Master Switch: Set to 'LOCAL' to bypass MongoDB, or 'REMOTE' to use Atlas
   DATA_SOURCE_OVERRIDE: 'REMOTE',

@@ -1,9 +1,10 @@
 // Service Worker for PWA support
-const CACHE_NAME = 'portfolio-v1';
+const CACHE_NAME = 'portfolio-v2';
+const BASE_PATH = new URL(self.registration.scope).pathname;
 const STATIC_ASSETS = [
-    '/',
-    '/index.html',
-    '/manifest.json',
+    BASE_PATH,
+    `${BASE_PATH}index.html`,
+    `${BASE_PATH}manifest.json`,
 ];
 
 // Install event - cache static assets
@@ -101,7 +102,7 @@ async function networkFirst(request) {
         
         // Return offline page for navigation
         if (request.mode === 'navigate') {
-            return caches.match('/');
+            return caches.match(BASE_PATH);
         }
         
         return new Response('Offline', { status: 503 });

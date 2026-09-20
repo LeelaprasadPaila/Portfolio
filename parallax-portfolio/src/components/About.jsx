@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { getData, STORAGE_KEYS } from '../data/dataStore';
 import { getBio, getProjects, getCertificates, getInternships } from '../services/api';
 import NeuralBackground from './NeuralBackground';
+import { assetUrl } from '../config/env';
 
 const About = ({ isActive, onClose }) => {
   const [age, setAge] = useState('');
@@ -105,7 +106,7 @@ const About = ({ isActive, onClose }) => {
         <div className="about-content">
           <div className="about-image">
             <div className="image-frame">
-              <img src={aboutData.profileImage || "/images/Portfolio_image.png"} alt="Profile" />
+              <img src={assetUrl(aboutData.profileImage || 'images/Portfolio_image.png')} alt="Profile" />
             </div>
             <div className="experience-badge">
               <span className="years">AI NATIVE</span>

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/Hero.css';
+import { assetUrl } from '../config/env';
 
 const Hero = ({ onExploreClick }) => {
     const containerRef = useRef(null);
@@ -51,7 +52,7 @@ const Hero = ({ onExploreClick }) => {
             {/* Background Video */}
             <div className="hero-bg">
                 <video autoPlay muted loop playsInline className="hero-bg-video">
-                    <source src="/images/Bg.mp4" type="video/mp4" />
+                    <source src={assetUrl('images/Bg.mp4')} type="video/mp4" />
                 </video>
                 <div className="hero-bg-overlay" />
                 <div className="hero-bg-grid" />
