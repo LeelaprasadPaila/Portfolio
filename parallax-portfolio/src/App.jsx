@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Layout from './pages/Layout';
-import HomePage from './pages/HomePage';
+import PortfolioLandingPage from './pages/PortfolioLandingPage';
 import AboutPage from './pages/AboutPage';
 import ProjectsPage from './pages/ProjectsPage';
 import ProjectDetail from './pages/ProjectDetail';
@@ -107,8 +107,8 @@ function App() {
         <ErrorBoundary>
             <SEO />
             <Routes>
+                <Route path="/" element={<PortfolioLandingPage />} />
                 <Route element={<Layout />}>
-                    <Route path="/" element={<HomePage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/projects" element={<ProjectsPage />} />
                     <Route path="/project/:projectTitle" element={<ProjectDetail />} />
