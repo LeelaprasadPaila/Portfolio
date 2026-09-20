@@ -69,6 +69,6 @@ process.on('SIGINT', () => {
 });
 
 console.log('\n💡 Tip: Open these URLs in your browser:');
-console.log('   Frontend: http://localhost:5174');
+console.log('   Frontend: http://localhost:5173');
 console.log('   Backend:  http://localhost:5000');
-console.log('   Admin:    http://localhost:5174/admin\n');
+console.log('   Admin:    http://localhost:5173/admin\n');

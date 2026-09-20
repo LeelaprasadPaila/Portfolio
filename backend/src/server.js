@@ -55,9 +55,6 @@ app.use(
 // Serve uploads folder
 app.use('/uploads', express.static('uploads'));
 
-// Connect Database
-connectDB();
-
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/bio', bioRoutes);
@@ -103,6 +100,8 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 console.log('📅 Daily AI training scheduled (midnight UTC)');
+
+await connectDB();
 
 app.listen(PORT, () => {
   console.log(`\n🚀 Server running on http://localhost:${PORT}`);
