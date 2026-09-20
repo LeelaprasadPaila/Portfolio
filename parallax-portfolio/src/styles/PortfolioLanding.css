@@ -31,7 +31,7 @@
 .portfolio-profile h1 { margin: 0; font-size: clamp(21px, 2vw, 29px); line-height: 1.02; letter-spacing: -.07em; }
 .portfolio-location { margin: 14px 0 0; color: var(--muted); font-size: 9px; }
 .portfolio-nav { display: grid; gap: 6px; margin: 64px 0 auto; }
-.portfolio-nav-link { display: flex; align-items: center; gap: 12px; padding: 9px 0; border: 0; background: transparent; color: #777d79; cursor: pointer; font: 600 11px 'Manrope', sans-serif; text-align: left; text-transform: uppercase; letter-spacing: .12em; transition: color .2s ease, transform .2s ease; }
+.portfolio-nav-link { display: flex; align-items: center; gap: 12px; padding: 9px 0; border: 0; background: transparent; color: #777d79; cursor: pointer; font: 600 11px 'Manrope', sans-serif; text-align: left; text-decoration: none; text-transform: uppercase; letter-spacing: .12em; transition: color .2s ease, transform .2s ease; }
 .portfolio-nav-link:hover, .portfolio-nav-link.is-active { color: var(--ink); transform: translateX(4px); }
 .portfolio-nav-link.is-active::after { content: ''; width: 25px; height: 1px; margin-left: auto; background: var(--ink); }
 .portfolio-nav-index { color: #9da19b; font-size: 9px; }
@@ -49,7 +49,7 @@
 .portfolio-hero-summary { max-width: 370px; margin: 42px 0 33px; color: #59615d; font-size: 14px; line-height: 1.7; }
 .portfolio-hero-actions { display: flex; align-items: center; gap: 25px; flex-wrap: wrap; }
 .portfolio-primary-action, .portfolio-text-action { cursor: pointer; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
-.portfolio-primary-action { padding: 15px 19px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); }
+.portfolio-primary-action { display: inline-flex; align-items: center; padding: 15px 19px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); text-decoration: none; }
 .portfolio-primary-action span, .portfolio-text-action span { margin-left: 13px; font-size: 15px; }
 .portfolio-text-action { padding: 8px 0; border: 0; background: transparent; color: var(--ink); }
 .portfolio-text-action::after { content: ''; display: block; height: 1px; margin-top: 5px; background: var(--ink); }

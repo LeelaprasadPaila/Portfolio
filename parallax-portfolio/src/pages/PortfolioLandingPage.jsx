@@ -14,7 +14,6 @@ const navigation = [
 
 const PortfolioLandingPage = () => {
     const navigate = useNavigate();
-    const openPortfolio = () => window.location.assign('/portfolio/');
 
     return (
         <div className="portfolio-landing">
@@ -34,14 +33,21 @@ const PortfolioLandingPage = () => {
 
                 <nav className="portfolio-nav" aria-label="Portfolio navigation">
                     {navigation.map((item, index) => (
-                        <button
-                            className={`portfolio-nav-link ${index === 0 ? 'is-active' : ''}`}
-                            key={item.path}
-                            onClick={() => item.path === '/portfolio/' ? openPortfolio() : navigate(item.path)}
-                        >
-                            <span className="portfolio-nav-index">0{index + 1}</span>
-                            {item.label}
-                        </button>
+                        item.path === '/portfolio/' ? (
+                            <a className="portfolio-nav-link" key={item.path} href="/portfolio/">
+                                <span className="portfolio-nav-index">0{index + 1}</span>
+                                {item.label}
+                            </a>
+                        ) : (
+                            <button
+                                className={`portfolio-nav-link ${index === 0 ? 'is-active' : ''}`}
+                                key={item.path}
+                                onClick={() => navigate(item.path)}
+                            >
+                                <span className="portfolio-nav-index">0{index + 1}</span>
+                                {item.label}
+                            </button>
+                        )
                     ))}
                 </nav>
 
@@ -65,9 +71,9 @@ const PortfolioLandingPage = () => {
                             AI-native systems, clear interfaces, and reliable backend architecture for people solving meaningful problems.
                         </p>
                         <div className="portfolio-hero-actions">
-                            <button className="portfolio-primary-action" onClick={openPortfolio}>
+                            <a className="portfolio-primary-action" href="/portfolio/">
                                 Open full portfolio <span aria-hidden="true">↗</span>
-                            </button>
+                            </a>
                             <button className="portfolio-text-action" onClick={() => navigate('/projects')}>
                                 View selected work <span aria-hidden="true">→</span>
                             </button>
