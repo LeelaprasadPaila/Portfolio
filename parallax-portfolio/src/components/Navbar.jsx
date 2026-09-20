@@ -7,7 +7,6 @@ const Navbar = ({ activeSection, onNavClick }) => {
 
   const navItems = [
     { id: 'home', label: 'Home' },
-    { id: 'portfolio', label: 'Portfolio', external: true },
     { id: 'projects', label: 'Projects' },
     { id: 'experience', label: 'Experience' },
     { id: 'resume', label: 'Resume' },
@@ -16,8 +15,6 @@ const Navbar = ({ activeSection, onNavClick }) => {
     { id: 'about', label: 'About' },
     { id: 'contact', label: 'Contact' },
   ];
-  const portfolioPath = import.meta.env.VITE_PORTFOLIO_MODE === 'true' ? '/' : '/portfolio/';
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -49,11 +46,6 @@ const Navbar = ({ activeSection, onNavClick }) => {
     onNavClick(id);
   };
 
-  const handlePortfolioClick = () => {
-    setIsMenuOpen(false);
-    window.location.assign('/portfolio/');
-  };
-
   return (
     <header className={`navbar ${isScrolled ? 'navbar-scrolled' : ''} ${isMenuOpen ? 'navbar-mobile-open' : ''}`}>
       <div className="navbar-inner">
@@ -66,20 +58,14 @@ const Navbar = ({ activeSection, onNavClick }) => {
         {/* Desktop Navigation */}
         <nav className="navbar-nav">
           {navItems.map((item) => (
-            item.external ? (
-              <a key={item.id} className="navbar-link" href={portfolioPath} onClick={handlePortfolioClick}>
-                {item.label}
-              </a>
-            ) : (
-              <button
-                key={item.id}
-                className={`navbar-link ${activeSection === item.id ? 'navbar-link-active' : ''}`}
-                onClick={() => handleNavClick(item.id)}
-              >
-                {item.label}
-                {activeSection === item.id && <span className="navbar-link-indicator" />}
-              </button>
-            )
+            <button
+              key={item.id}
+              className={`navbar-link ${activeSection === item.id ? 'navbar-link-active' : ''}`}
+              onClick={() => handleNavClick(item.id)}
+            >
+              {item.label}
+              {activeSection === item.id && <span className="navbar-link-indicator" />}
+            </button>
           ))}
         </nav>
 
@@ -125,19 +111,13 @@ const Navbar = ({ activeSection, onNavClick }) => {
       <div className={`navbar-mobile ${isMenuOpen ? 'navbar-mobile-visible' : ''}`}>
         <nav className="navbar-mobile-nav">
           {navItems.map((item) => (
-            item.external ? (
-              <a key={item.id} className="navbar-mobile-link" href={portfolioPath} onClick={handlePortfolioClick}>
-                {item.label}
-              </a>
-            ) : (
-              <button
-                key={item.id}
-                className={`navbar-mobile-link ${activeSection === item.id ? 'navbar-mobile-link-active' : ''}`}
-                onClick={() => handleNavClick(item.id)}
-              >
-                {item.label}
-              </button>
-            )
+            <button
+              key={item.id}
+              className={`navbar-mobile-link ${activeSection === item.id ? 'navbar-mobile-link-active' : ''}`}
+              onClick={() => handleNavClick(item.id)}
+            >
+              {item.label}
+            </button>
           ))}
         </nav>
       </div>
