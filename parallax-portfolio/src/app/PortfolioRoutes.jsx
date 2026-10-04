@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import AboutPage from '../pages/AboutPage';
 import AdminPage from '../pages/AdminPage';
 import CertificationsPage from '../pages/CertificationsPage';
@@ -29,7 +29,7 @@ export default function PortfolioRoutes({ isPortfolioBuild }) {
         <Routes>
             <Route element={<Layout />}>
                 <Route index element={<HomePage />} />
-                <Route path="home" element={<HomePage />} />
+                <Route path="home" element={<Navigate to="/" replace />} />
                 <Route path="about" element={<AboutPage />} />
                 <Route path="projects" element={<ProjectsPage />} />
                 <Route path="project/:projectTitle" element={<ProjectDetail />} />

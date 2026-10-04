@@ -60,7 +60,7 @@ const PortfolioLandingPage = () => {
                             AI-native systems, clear interfaces, and reliable backend architecture for people solving meaningful problems.
                         </p>
                         <div className="portfolio-hero-actions">
-                            <a className="portfolio-primary-action" href={portfolioPath('/home')}>
+                            <a className="portfolio-primary-action" href={portfolioPath('/')}>
                                 Open full portfolio <span aria-hidden="true">↗</span>
                             </a>
                             <button className="portfolio-text-action" onClick={() => window.location.assign(portfolioPath('/projects'))}>
