@@ -14,12 +14,14 @@ import ProjectsPage from '../pages/ProjectsPage';
 import ResearchPapersPage from '../pages/ResearchPapersPage';
 import ResumePage from '../pages/ResumePage';
 import SkillsPage from '../pages/SkillsPage';
+import SocialMediaPage from '../pages/SocialMedia/SocialMediaPage';
 
 export default function PortfolioRoutes({ isPortfolioBuild }) {
     if (!isPortfolioBuild) {
         return (
             <Routes>
                 <Route path="/" element={<PortfolioLandingPage />} />
+                <Route path="/social-media" element={<SocialMediaPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         );

@@ -3,11 +3,11 @@ import { assetUrl } from '../config/env';
 const portfolioPath = (path) => `/portfolio${path === '/' ? '/' : `/${String(path).replace(/^\/+/, '')}`}`;
 
 const navigation = [
-    { label: 'Blogs', path: '/' },
-    { label: 'Portfolio', path: '' },
-    { label: 'Social Media', path: '/about' },
-    { label: 'Priligramage', path: '/projects' },
-    { label: 'Adventures', path: '/experience' }
+    { label: 'Blogs', href: '/' },
+    { label: 'Portfolio', href: '/portfolio/' },
+    { label: 'Social Media', href: '/social-media' },
+    { label: 'Priligramage', href: '/portfolio/projects' },
+    { label: 'Adventures', href: '/portfolio/experience' }
 ];
 
 const PortfolioLandingPage = () => {
@@ -31,8 +31,8 @@ const PortfolioLandingPage = () => {
                     {navigation.map((item, index) => (
                         <button
                             className={`portfolio-nav-link ${index === 0 ? 'is-active' : ''}`}
-                            key={item.path}
-                            onClick={() => window.location.assign(item.path === '/' ? '/' : portfolioPath(item.path))}
+                            key={item.href}
+                            onClick={() => window.location.assign(item.href)}
                         >
                             <span className="portfolio-nav-index">0{index + 1}</span>
                             {item.label}

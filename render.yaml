@@ -6,6 +6,12 @@ services:
     staticPublishPath: ./render-dist
     routes:
       - type: rewrite
+        source: /social-media
+        destination: /index.html
+      - type: rewrite
+        source: /social-media/*
+        destination: /index.html
+      - type: rewrite
         source: /portfolio
         destination: /portfolio/index.html
       - type: rewrite

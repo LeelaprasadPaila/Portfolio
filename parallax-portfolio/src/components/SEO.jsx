@@ -50,6 +50,11 @@ const pageMeta = {
         description: 'Get in touch with Paila Leela Prasad for collaboration, opportunities, or project inquiries.',
         ogType: 'website',
     },
+    '/social-media': {
+        title: 'Social Media - Paila Leela Prasad | Connect',
+        description: 'Find Paila Leela Prasad on GitHub, LinkedIn, and X, or get in touch by email.',
+        ogType: 'profile',
+    },
 };
 
 const SEO = ({ customMeta = {} }) => {

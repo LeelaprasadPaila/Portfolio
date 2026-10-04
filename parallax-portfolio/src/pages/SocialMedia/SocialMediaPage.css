@@ -1,0 +1,312 @@
+.social-media-page {
+    --social-ink: #151717;
+    --social-muted: #69716d;
+    --social-paper: #f1f0eb;
+    --social-line: rgba(21, 23, 23, 0.15);
+    --social-accent: #d5f156;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 0 clamp(22px, 6vw, 96px);
+    background: var(--social-paper);
+    color: var(--social-ink);
+    font-family: 'Manrope', sans-serif;
+}
+
+.social-media-shell {
+    width: min(100%, 1320px);
+    margin: 0 auto;
+}
+
+.social-media-header {
+    min-height: 84px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--social-line);
+}
+
+.social-media-wordmark {
+    color: var(--social-ink);
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: -.1em;
+    text-decoration: none;
+}
+
+.social-media-wordmark span {
+    color: #93ab27;
+}
+
+.social-media-nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(22px, 4vw, 54px);
+}
+
+.social-media-nav a,
+.social-media-intro-aside a,
+.social-media-footer a {
+    color: var(--social-ink);
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.social-media-nav a:hover,
+.social-media-intro-aside a:hover,
+.social-media-footer a:hover {
+    color: #647a12;
+}
+
+.social-media-nav a span {
+    margin-left: 4px;
+}
+
+.social-media-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(250px, .65fr);
+    align-items: end;
+    gap: 48px;
+    padding: clamp(64px, 10vw, 132px) 0 clamp(54px, 7vw, 86px);
+}
+
+.social-media-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 26px;
+    color: var(--social-muted);
+    font: 10px 'DM Mono', monospace;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.social-media-eyebrow span {
+    width: 28px;
+    height: 1px;
+    background: currentColor;
+}
+
+.social-media-intro h1 {
+    margin: 0;
+    font-size: clamp(54px, 8.2vw, 112px);
+    font-weight: 700;
+    letter-spacing: -.085em;
+    line-height: .91;
+}
+
+.social-media-intro h1 em {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    letter-spacing: -.075em;
+}
+
+.social-media-intro-aside {
+    max-width: 340px;
+    padding-bottom: 9px;
+}
+
+.social-media-intro-aside p {
+    margin: 0 0 24px;
+    color: var(--social-muted);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.social-media-intro-aside a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--social-line);
+}
+
+.social-media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.social-account-card {
+    min-height: 330px;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(22px, 3vw, 38px);
+    border: 1px solid var(--social-line);
+    background: rgba(255, 255, 255, .28);
+    color: var(--social-ink);
+    text-decoration: none;
+    transition: transform .25s ease, background-color .25s ease, border-color .25s ease;
+}
+
+.social-account-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(21, 23, 23, .35);
+    background: rgba(255, 255, 255, .7);
+}
+
+.social-account-card:focus-visible,
+.social-media-nav a:focus-visible,
+.social-media-wordmark:focus-visible,
+.social-media-footer a:focus-visible,
+.social-media-intro-aside a:focus-visible {
+    outline: 2px solid #647a12;
+    outline-offset: 4px;
+}
+
+.social-account-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.social-account-index,
+.social-account-category {
+    color: var(--social-muted);
+    font: 10px 'DM Mono', monospace;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.social-account-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--social-accent);
+}
+
+.social-account-icon svg {
+    width: 21px;
+    height: 21px;
+    fill: currentColor;
+}
+
+.social-account-arrow {
+    color: var(--social-muted);
+    font-size: 18px;
+    transition: transform .25s ease;
+}
+
+.social-account-card:hover .social-account-arrow {
+    transform: translate(3px, -3px);
+}
+
+.social-account-copy {
+    margin-top: auto;
+    padding: 46px 0 27px;
+}
+
+.social-account-copy h2 {
+    margin: 11px 0 4px;
+    font-size: clamp(25px, 3vw, 36px);
+    letter-spacing: -.06em;
+}
+
+.social-account-handle {
+    color: var(--social-muted);
+    font-size: 12px;
+}
+
+.social-account-copy p {
+    max-width: 300px;
+    margin: 19px 0 0;
+    color: var(--social-muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.social-account-visit {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 15px;
+    border-top: 1px solid var(--social-line);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.social-account-visit span {
+    font-size: 16px;
+}
+
+.social-media-footer {
+    min-height: 88px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    color: var(--social-muted);
+    font-size: 11px;
+}
+
+.social-media-footer a {
+    font-size: 11px;
+}
+
+@media (max-width: 820px) {
+    .social-media-intro {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .social-media-intro-aside {
+        max-width: 440px;
+    }
+
+    .social-media-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .social-media-page {
+        padding: 0 20px;
+    }
+
+    .social-media-header {
+        min-height: 70px;
+    }
+
+    .social-media-nav {
+        gap: 19px;
+    }
+
+    .social-media-nav a {
+        font-size: 11px;
+    }
+
+    .social-media-intro {
+        padding-top: 66px;
+        padding-bottom: 44px;
+    }
+
+    .social-media-intro h1 {
+        font-size: clamp(49px, 14vw, 72px);
+    }
+
+    .social-media-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .social-account-card {
+        min-height: 290px;
+        padding: 23px;
+    }
+
+    .social-media-footer {
+        min-height: auto;
+        padding: 25px 0;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .social-account-card,
+    .social-account-arrow {
+        transition: none;
+    }
+}
