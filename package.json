@@ -7,7 +7,9 @@
     "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"yellow,cyan\" \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd parallax-portfolio && npm run dev",
+    "dev:landing": "cd parallax-portfolio && npm run dev:landing",
     "build": "cd parallax-portfolio && npm run build",
+    "build:render": "npm --prefix parallax-portfolio run build:render && node scripts/assemble-render-site.mjs",
     "preview": "cd parallax-portfolio && npm run preview",
     "install:all": "cd backend && npm install && cd ../parallax-portfolio && npm install",
     "start": "cd backend && npm start"

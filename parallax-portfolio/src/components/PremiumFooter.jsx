@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { assetUrl } from '../config/env';
+import { assetUrl, appHref } from '../config/env';
 import '../styles/PremiumFooter.css';
 
 const PremiumFooter = ({ onAdminClick }) => {
@@ -72,12 +72,12 @@ const PremiumFooter = ({ onAdminClick }) => {
                         <h4 className="premium-footer-col-title">Quick Links</h4>
                         <ul className="premium-footer-links">
                             {[
-                                { label: 'Home', href: '/' },
-                                { label: 'Projects', href: '/projects' },
-                                { label: 'Experience', href: '/experience' },
-                                { label: 'Certifications', href: '/certificates' },
-                                { label: 'About', href: '/about' },
-                                { label: 'Contact', href: '/contact' },
+                                { label: 'Home', href: appHref('/') },
+                                { label: 'Projects', href: appHref('/projects') },
+                                { label: 'Experience', href: appHref('/experience') },
+                                { label: 'Certifications', href: appHref('/certificates') },
+                                { label: 'About', href: appHref('/about') },
+                                { label: 'Contact', href: appHref('/contact') },
                             ].map((link, i) => (
                                 <li key={i}>
                                     <a href={link.href} className="premium-footer-link">

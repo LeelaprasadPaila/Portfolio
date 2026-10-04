@@ -10,6 +10,8 @@ temp/
 **/temp/
 dist/
 **/dist/
+**/dist-*/
+render-dist/
 build/
 **/build/
 *.log

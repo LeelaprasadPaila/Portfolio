@@ -9,6 +9,13 @@ const isLocalhost = typeof window !== 'undefined' && /localhost|127\.0\.0\.1/.te
 // the app from /portfolio/ instead of the domain root.
 export const assetUrl = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
 
+// Builds a router-aware href for in-app links so they stay inside the app's base
+// path (e.g. /portfolio/projects instead of /projects).
+export const appHref = (path) => {
+    const clean = String(path || '/').replace(/^\/+/, '');
+    return `${import.meta.env.BASE_URL}${clean}`;
+};
+
 const ENV = {
   // Master Switch: Set to 'LOCAL' to bypass MongoDB, or 'REMOTE' to use Atlas
   DATA_SOURCE_OVERRIDE: 'REMOTE',

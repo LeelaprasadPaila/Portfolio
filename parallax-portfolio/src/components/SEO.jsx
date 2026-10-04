@@ -3,7 +3,10 @@ import { useLocation } from 'react-router-dom';
 
 const DEFAULT_TITLE = 'Paila Leela Prasad - AI Architect & Full-Stack Engineer Portfolio';
 const DEFAULT_DESCRIPTION = 'AI & Machine Learning specialist portfolio showcasing 50+ projects, certifications, and expertise in artificial intelligence, deep learning, and full-stack engineering.';
-const SITE_URL = 'https://leelaprasad.dev/';
+const SITE_ORIGIN = 'https://leelaprasad.dev';
+// The app is served from /portfolio/, so all absolute URLs need that prefix.
+const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '');
+const SITE_URL = `${SITE_ORIGIN}${BASE_PATH}/`;
 const SITE_NAME = 'Paila Leela Prasad Portfolio';
 
 const pageMeta = {
@@ -58,7 +61,7 @@ const SEO = ({ customMeta = {} }) => {
     const description = customMeta.description || meta.description;
     const ogType = customMeta.ogType || meta.ogType || 'website';
     const canonical = customMeta.canonical || `${SITE_URL}${path === '/' ? '' : path.substring(1)}`;
-    const image = customMeta.image || 'https://leelaprasad.dev/images/og-image.jpg';
+    const image = customMeta.image || `${SITE_ORIGIN}${BASE_PATH}/images/og-image.jpg`;
 
     useEffect(() => {
         // Update document title

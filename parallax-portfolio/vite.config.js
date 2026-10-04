@@ -1,68 +1,79 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { visualizer } from 'rollup-plugin-visualizer'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
-export default defineConfig({
-    base: process.env.VITE_PORTFOLIO_MODE === 'true' ? '/portfolio/' : '/',
-    plugins: [
-        react()
-    ],
+export default defineConfig(({ mode }) => {
+  const isPortfolioBuild = mode === 'portfolio';
+  const isLandingMode = mode === 'landing';
+
+  return {
+    // Landing Page and Portfolio builds have separate public roots and outputs.
+    base: isPortfolioBuild ? '/portfolio/' : '/',
+    plugins: [react()],
     server: {
-        host: true,
-        port: 5173,
-        proxy: {
-            '/api': {
-                target: 'http://localhost:5000',
-                changeOrigin: true,
-                secure: false
-            },
-            '/uploads': {
-                target: 'http://localhost:5000',
-                changeOrigin: true,
-                secure: false
-            }
-        }
+      host: true,
+      port: 5173,
+      proxy: {
+        // In combined local development, keep both independent apps on one
+        // browser origin while the Portfolio Vite server remains on port 5173.
+        ...(isLandingMode ? {
+          '/portfolio': {
+            target: 'http://127.0.0.1:5173',
+            changeOrigin: false,
+            ws: true,
+          },
+        } : {}),
+        '/api': {
+          target: 'http://localhost:5000',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/uploads': {
+          target: 'http://localhost:5000',
+          changeOrigin: true,
+          secure: false,
+        },
+      },
     },
     build: {
-        outDir: process.env.VITE_PORTFOLIO_MODE === 'true' ? 'dist-portfolio' : 'dist-main',
-        target: 'es2020',
-        minify: 'terser',
-        terserOptions: {
-            compress: {
-                drop_console: true,
-                drop_debugger: true,
-                pure_funcs: ['console.log', 'console.warn', 'console.info']
-            },
-            mangle: {
-                safari10: true
-            }
+      outDir: isPortfolioBuild ? 'dist-portfolio' : 'dist-main',
+      target: 'es2020',
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+          pure_funcs: ['console.log', 'console.warn', 'console.info'],
         },
-        rollupOptions: {
-            output: {
-                manualChunks: {
-                    'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-                    'animation-vendor': ['gsap'],
-                    'three-vendor': ['three']
-                },
-                chunkFileNames: 'assets/js/[name]-[hash].js',
-                entryFileNames: 'assets/js/[name]-[hash].js',
-                assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
-            }
+        mangle: {
+          safari10: true,
         },
-        cssCodeSplit: true,
-        sourcemap: false,
-        reportCompressedSize: true,
-        chunkSizeWarningLimit: 200
+      },
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+            'animation-vendor': ['gsap'],
+            'three-vendor': ['three'],
+          },
+          chunkFileNames: 'assets/js/[name]-[hash].js',
+          entryFileNames: 'assets/js/[name]-[hash].js',
+          assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
+        },
+      },
+      cssCodeSplit: true,
+      sourcemap: false,
+      reportCompressedSize: true,
+      chunkSizeWarningLimit: 200,
     },
     optimizeDeps: {
-        include: ['react', 'react-dom', 'react-router-dom', 'gsap'],
-        exclude: []
+      include: ['react', 'react-dom', 'react-router-dom', 'gsap'],
+      exclude: [],
     },
     css: {
-        devSourcemap: false,
-        modules: {
-            localsConvention: 'camelCase'
-        }
-    }
-})
+      devSourcemap: false,
+      modules: {
+        localsConvention: 'camelCase',
+      },
+    },
+  };
+});

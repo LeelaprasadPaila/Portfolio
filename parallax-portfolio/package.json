@@ -4,10 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node dev-combined.js",
+    "dev:portfolio": "vite --mode portfolio --port 5173",
+    "dev:landing": "vite --mode landing --port 5174",
+    "build": "vite build --mode portfolio",
+    "build:landing": "vite build --mode landing",
+    "build:render": "npm run build:landing && npm run build",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "vite preview --mode portfolio",
     "dev:all": "node dev-start.js",
     "backend": "cd ../backend && npm run dev",
     "frontend": "npm run dev"
@@ -23,7 +27,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
-    "rollup-plugin-visualizer": "^7.0.1",
     "terser": "^5.48.0",
     "vite": "^6.0.5"
   }

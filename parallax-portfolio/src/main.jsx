@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import App from './App.jsx'
+import App from './app/App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { LoadingProvider } from './context/LoadingContext.jsx'
 import LoadingOverlay from './components/LoadingOverlay.jsx'

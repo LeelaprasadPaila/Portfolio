@@ -5,9 +5,10 @@
 
 .premium-footer {
     position: relative;
+    width: 100%;
     background: var(--color-bg-primary, #020205);
     border-top: 1px solid rgba(255, 255, 255, 0.04);
-    overflow: hidden;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.5);
 }
 
 /* === Wave Divider === */
@@ -250,7 +251,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--color-text-primary, #fff);
     cursor: pointer;
-    z-index: 100;
+    z-index: 950;
     opacity: 0;
     transform: translateY(20px) scale(0.8);
     transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);

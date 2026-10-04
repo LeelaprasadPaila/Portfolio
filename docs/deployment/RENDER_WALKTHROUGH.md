@@ -40,24 +40,22 @@ On [Render.com](https://render.com/):
 ---
 
 ## 🌐 Phase 3: Deploy the Frontend (The Visuals)
-On [Render.com](https://render.com/):
-1.  **New** → **Static Site**.
-2.  Connect your GitHub Repo: **LeelaprasadPaila/Portfolio**.
-3.  **Root Directory**: `parallax-portfolio` (CRITICAL).
-4.  **Build Command**: `npm install && npm run build`
-5.  **Publish Directory**: `dist`
-6.  **Environment Variables**:
-    - **VITE_API_URL**: `https://YOUR-BACKEND-URL.onrender.com/api`
-    - **VITE_API_BASE_URL**: `https://YOUR-BACKEND-URL.onrender.com`
-    > [!TIP]
-    > Get the backend URL from your backend service dashboard on Render!
+The repository's `render.yaml` defines a combined static site named `portfolio-site`. Use it to create that service, or match its name when syncing an existing Blueprint-managed service. For a dashboard-managed service, apply the same build command, publish directory, environment variables, and rewrite rules in the Render dashboard.
+
+The build compiles the existing Landing Page component in `landing` mode and the full Portfolio in `portfolio` mode, then assembles them into `render-dist/` at `/` and `/portfolio/`. The Landing Page does not yet have a separate source project; its current source component remains in the Portfolio Vite project. Do not configure the frontend service with `parallax-portfolio` as its Root Directory or `dist` as its Publish Directory: that would publish the wrong directory for the required root-plus-`/portfolio` URL layout.
+
+Set the Blueprint's prompted environment variables:
+- `VITE_API_URL`: `https://YOUR-BACKEND-URL.onrender.com/api`
+- `VITE_STORAGE_URL`: `https://YOUR-BACKEND-URL.onrender.com/uploads`
+
+The Blueprint includes rewrites for `/portfolio` and `/portfolio/*` to the Portfolio `index.html`, allowing React Router to handle direct navigation and refreshes without changing the browser URL. The backend remains a separate Render Web Service.
 
 ---
 
 ## ✅ Phase 4: Finalizing the Admin Login
 Once both services are "Live":
-1.  Visit your Frontend URL.
-2.  Navigate to the **Admin System**.
+1.  Visit `https://YOUR-FRONTEND-URL/portfolio/`.
+2.  Navigate to the **Admin System** at `/portfolio/admin`.
 3.  Log in using the `ADMIN_USERNAME` and `ADMIN_PASSWORD` you set in Phase 2.
 4.  **Important**: Click **"SYNC BIO DATA"** or **"SYNC PROJECT DATA"** once to ensure the MongoDB database is initialized with your initial data.
 

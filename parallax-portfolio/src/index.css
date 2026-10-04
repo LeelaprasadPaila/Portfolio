@@ -73,7 +73,7 @@ button, input, textarea, select {
     font: inherit;
 }
 
-/* Ensure main content starts below the fixed navbar */
+/* Keep main content clear of the fixed navbar. The footer remains in document flow. */
 main#main-content {
     padding-top: calc(var(--navbar-height, 72px) + 0.5rem);
 }

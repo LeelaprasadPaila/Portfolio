@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: portfolio-site
+    runtime: static
+    buildCommand: npm ci --prefix parallax-portfolio && npm run build:render
+    staticPublishPath: ./render-dist
+    routes:
+      - type: rewrite
+        source: /portfolio
+        destination: /portfolio/index.html
+      - type: rewrite
+        source: /portfolio/*
+        destination: /portfolio/index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false
+      - key: VITE_STORAGE_URL
+        sync: false

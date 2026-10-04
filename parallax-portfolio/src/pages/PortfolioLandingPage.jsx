@@ -1,20 +1,16 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { assetUrl } from '../config/env';
 
+const portfolioPath = (path) => `/portfolio${path === '/' ? '/' : `/${String(path).replace(/^\/+/, '')}`}`;
+
 const navigation = [
-    { label: 'Home', path: '/' },
-    { label: 'Portfolio', path: '/portfolio/' },
-    { label: 'About', path: '/about' },
-    { label: 'Projects', path: '/projects' },
-    { label: 'Experience', path: '/experience' },
-    { label: 'Skills', path: '/skills' },
-    { label: 'Contact', path: '/contact' }
+    { label: 'Blogs', path: '/' },
+    { label: 'Portfolio', path: '' },
+    { label: 'Social Media', path: '/about' },
+    { label: 'Priligramage', path: '/projects' },
+    { label: 'Adventures', path: '/experience' }
 ];
 
 const PortfolioLandingPage = () => {
-    const navigate = useNavigate();
-
     return (
         <div className="portfolio-landing">
             <aside className="portfolio-sidebar">
@@ -33,21 +29,14 @@ const PortfolioLandingPage = () => {
 
                 <nav className="portfolio-nav" aria-label="Portfolio navigation">
                     {navigation.map((item, index) => (
-                        item.path === '/portfolio/' ? (
-                            <a className="portfolio-nav-link" key={item.path} href="/portfolio/">
-                                <span className="portfolio-nav-index">0{index + 1}</span>
-                                {item.label}
-                            </a>
-                        ) : (
-                            <button
-                                className={`portfolio-nav-link ${index === 0 ? 'is-active' : ''}`}
-                                key={item.path}
-                                onClick={() => navigate(item.path)}
-                            >
-                                <span className="portfolio-nav-index">0{index + 1}</span>
-                                {item.label}
-                            </button>
-                        )
+                        <button
+                            className={`portfolio-nav-link ${index === 0 ? 'is-active' : ''}`}
+                            key={item.path}
+                            onClick={() => window.location.assign(item.path === '/' ? '/' : portfolioPath(item.path))}
+                        >
+                            <span className="portfolio-nav-index">0{index + 1}</span>
+                            {item.label}
+                        </button>
                     ))}
                 </nav>
 
@@ -60,7 +49,7 @@ const PortfolioLandingPage = () => {
             <main className="portfolio-landing-main">
                 <header className="portfolio-mobile-header">
                     <span>LP / PORTFOLIO</span>
-                    <button onClick={() => navigate('/contact')} aria-label="Open contact page">Let's talk <span aria-hidden="true">↗</span></button>
+                    <button onClick={() => window.location.assign(portfolioPath('/contact'))} aria-label="Open contact page">Let's talk <span aria-hidden="true">↗</span></button>
                 </header>
 
                 <section className="portfolio-hero" aria-labelledby="portfolio-hero-title">
@@ -71,31 +60,19 @@ const PortfolioLandingPage = () => {
                             AI-native systems, clear interfaces, and reliable backend architecture for people solving meaningful problems.
                         </p>
                         <div className="portfolio-hero-actions">
-                            <a className="portfolio-primary-action" href="/portfolio/">
+                            <a className="portfolio-primary-action" href={portfolioPath('/home')}>
                                 Open full portfolio <span aria-hidden="true">↗</span>
                             </a>
-                            <button className="portfolio-text-action" onClick={() => navigate('/projects')}>
+                            <button className="portfolio-text-action" onClick={() => window.location.assign(portfolioPath('/projects'))}>
                                 View selected work <span aria-hidden="true">→</span>
                             </button>
                         </div>
                     </div>
 
                     <div className="portfolio-portrait-panel">
-                        <div className="portfolio-portrait-label">01 — PROFILE</div>
                         <img src={assetUrl('images/Portfolio_image.png')} alt="Leela Prasad Paila, AI Native Engineer" />
                         <span className="portfolio-portrait-caption">Curious by default.<br />Precise by practice.</span>
                     </div>
-                </section>
-
-                <section className="portfolio-intro-strip" aria-label="Portfolio highlights">
-                    <p>Selected capabilities</p>
-                    <div className="portfolio-capabilities">
-                        <span>Machine learning</span>
-                        <span>AI agents</span>
-                        <span>Python systems</span>
-                        <span>Creative technology</span>
-                    </div>
-                    <span className="portfolio-scroll-mark">Scroll to explore ↓</span>
                 </section>
             </main>
         </div>
